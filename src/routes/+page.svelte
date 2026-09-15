@@ -89,7 +89,7 @@
 		place-content: center;
 		box-sizing: border-box;
 		background-image: url('$lib/images/Pattern.webp');
-		background-size: 220px;
+		background-size: 400px;
 		background-position: center;
 	}
 
