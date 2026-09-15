@@ -1,0 +1,53 @@
+import { APP_STATE } from './const';
+import { _sound } from './sound.svelte';
+
+export const newStats = () => ({ plays: 0, total: 0, best: 0 });
+
+export const ss = $state({
+    stats: newStats(),
+    home: true,
+    scale: 1,
+});
+
+const appKey = $derived(APP_STATE + ' • ' + '???');
+
+export const _log = (value) => console.log($state.snapshot(value));
+
+export const persistCommon = () => {
+    const json = JSON.stringify({ sfx: _sound.sfx, music: _sound.music });
+    localStorage.setItem(APP_STATE, json);
+};
+
+export const loadCommon = () => {
+    const json = localStorage.getItem(APP_STATE);
+    const job = JSON.parse(json);
+
+    if (job) {
+        _sound.sfx = job.sfx;
+        _sound.music = job.music;
+    }
+};
+
+export const persist = () => {
+    const json = JSON.stringify({ stats: ss.stats, over: ss.over, pzl: ss.pzl });
+    localStorage.setItem(appKey, json);
+};
+
+export const loadGame = () => {
+    const json = localStorage.getItem(appKey);
+    const job = JSON.parse(json);
+
+    if (!job) {
+        ss.stats = newStats();
+        return false;
+    }
+
+    ss.stats = job.stats;
+
+    if (!job.over) {
+        ss.pzl = job.pzl;
+        return true;
+    }
+
+    return false;
+};

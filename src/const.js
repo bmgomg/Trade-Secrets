@@ -1,0 +1,9 @@
+export const APP_STATE = '••• V1';
+export const DX = 450;
+export const DY = 800;
+export const PROMPT_PLAY_MORE = 'Paint more?';
+export const PROMPT_SURRENDER = 'Stats will be reset — give up?';
+export const PROMPT_RESET_STATS = 'Reset stats?';
+export const PROMPT_NO = 'No';
+export const MSG_AVERAGE_IMPROVED = 'Average improved!';
+export const MSG_BEST_SCORE = 'Best score!';
