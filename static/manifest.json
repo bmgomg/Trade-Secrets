@@ -1,7 +1,7 @@
 {
 	"name": "Trade Secrets",
 	"short_name": "Trade Secrets",
-	"description": "Trade Secrets",
+	"description": "Three hidden words. Nine letters. Every peek risks a move.",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",
