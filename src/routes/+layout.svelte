@@ -17,7 +17,7 @@
 			--ink: #b6cfe4;
 			--water: #2c3a49;
 			--dark: #0a1a18;
-			--cream: #f0e9d9;
+			--ice: #e6f1fb;
 			--teal: #2fb3a8;
 			--gold: #f2b134;
 			--pink: #e0457b;
@@ -62,6 +62,14 @@
 
 		.ga11 {
 			grid-area: 1/1;
+		}
+
+		.flowcol {
+			grid-auto-flow: column;
+		}
+
+		.psc {
+			place-self: center;
 		}
 
 		@font-face {

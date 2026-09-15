@@ -18,18 +18,37 @@
 		'Solve in as few trades as possible.'
 	];
 
+	const TILES = [
+		{ ch: 'Y', bg: 1 },
+		{ ch: 'G', bg: 2 },
+		{ ch: 'A', bg: 3 },
+		{ ch: 'P', bg: 1 },
+		{ ch: 'S', bg: 1 },
+		{ ch: 'I', bg: 2 },
+		{ ch: 'N', bg: 2 },
+		{ ch: 'D', bg: 3 },
+		{ ch: 'F', bg: 3 }
+	];
+
 	const style =
-		'font-size: 28px; width: 100%; height: 60px; background: var(--teal); color: var(--dark); letter-spacing: 3px; font-weight: 600; border-radius: 999px;';
+		'font-size: 24px; width: 100%; padding: 10px 0; background: var(--teal); color: var(--dark); letter-spacing: 3px; font-weight: 600; border-radius: 999px;';
 </script>
 
 {#if ss.home}
 	<div class="home ga11 nohi" in:fade={{ duration: 200 }}>
+		<!-- <img src={Hero} alt="" width={200} /> -->
+		<div class="hero psc grid">
+			{#each _range(1, 9) as i (i)}
+				{@const tile = TILES[i - 1]}
+				<div class="tile grid bg-{((tile.bg - 1) % 3) + 1}">{tile.ch}</div>
+			{/each}
+		</div>
 		<div class="title">Trade Secrets</div>
 		<div class="tagline">Every peek risks a move</div>
 		<div class="bullets">
 			{#each _range(1, BULLETS.length) as i (i)}
 				<div class="bullet-item">
-					<div class="bullet bullet-{((i - 1) % 3) + 1}"></div>
+					<div class="bullet bg-{((i - 1) % 3) + 1}"></div>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					<div class="text">{@html BULLETS[i - 1]}</div>
 				</div>
@@ -46,11 +65,31 @@
 		place-content: center;
 	}
 
+	img {
+		justify-self: center;
+	}
+
+	.hero {
+		gap: 10px;
+		grid: repeat(3, 60px) / repeat(3, 60px);
+	}
+
+	.tile {
+		border-radius: 9px;
+		place-content: center;
+		font-family: Archivo;
+		font-weight: 800;
+		font-size: 28px;
+		color: var(--dark);
+	}
+
 	.title {
 		justify-self: center;
 		font-size: 48px;
 		font-weight: 600;
 		letter-spacing: 0.05em;
+		margin-top: 25px;
+		color: var(--ice);
 	}
 
 	.tagline {
@@ -62,11 +101,11 @@
 	}
 
 	.bullets {
-		margin: 50px 0;
+		margin: 40px 0 50px;
 		width: 380px;
 		display: grid;
 		gap: 10px;
-		font-size: 20px;
+		font-size: 19px;
 		text-wrap: pretty;
 	}
 
@@ -84,15 +123,15 @@
 		box-shadow: 2px 2px 2px black;
 	}
 
-	.bullet-1 {
+	.bg-1 {
 		background: var(--teal);
 	}
 
-	.bullet-2 {
+	.bg-2 {
 		background: var(--gold);
 	}
 
-	.bullet-3 {
+	.bg-3 {
 		background: var(--pink);
 	}
 
