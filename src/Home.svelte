@@ -3,29 +3,39 @@
 	import { fade } from 'svelte/transition';
 	import { loadCommon, ss } from './shared.svelte';
 	import TextButton from './Text Button.svelte';
+	import { _range } from './utils';
 
 	onMount(loadCommon);
 
-    const hi = '<span style="color: var(--cream);">';
+	const hi = '<span style="color: var(--teal);">';
+
+	const BULLETS = [
+		`Nine letters hide three words, one ${hi}secret color</span> each.`,
+		`Tap two letters to ${hi}reveal their colors</span>.`,
+		`${hi}Different colors</span> trade places. ${hi}Matching colors</span> stay put.`,
+		'Either way, the colors go dark again.',
+		`You win when each row is a word in a ${hi}single color</span>.`,
+		'Solve in as few trades as possible.'
+	];
+
+	const style =
+		'font-size: 28px; width: 100%; height: 60px; background: var(--teal); color: var(--dark); letter-spacing: 3px; font-weight: 600; border-radius: 999px;';
 </script>
 
 {#if ss.home}
 	<div class="home ga11 nohi" in:fade={{ duration: 200 }}>
-		{#snippet bullet(text)}
-			<div class="bullet-item">
-				<div class="bullet"></div>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				<div class="text">{@html text}</div>
-			</div>
-		{/snippet}
+		<div class="title">Trade Secrets</div>
+		<div class="tagline">Every peek risks a move</div>
 		<div class="bullets">
-			{@render bullet(`Nine letters hide three words, one ${hi}secret color</span> each.`)}
-			{@render bullet(`Tap two letters to ${hi}reveal their colors</span>.`)}
-			{@render bullet(`${hi}Different colors</span> trade places. ${hi}Matching colors</span> stay put.`)}
-			{@render bullet('Either way, the colors go dark again.')}
-			{@render bullet('You win when each row is a word in a single color.')}
+			{#each _range(1, BULLETS.length) as i (i)}
+				<div class="bullet-item">
+					<div class="bullet bullet-{((i - 1) % 3) + 1}"></div>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					<div class="text">{@html BULLETS[i - 1]}</div>
+				</div>
+			{/each}
 		</div>
-		<TextButton text={['PLAY']} onClick={() => delete ss.home} style='font-size: 28px;'/>
+		<TextButton text={['PLAY']} onClick={() => delete ss.home} {style} />
 	</div>
 {/if}
 
@@ -36,13 +46,28 @@
 		place-content: center;
 	}
 
+	.title {
+		justify-self: center;
+		font-size: 48px;
+		font-weight: 600;
+		letter-spacing: 0.05em;
+	}
+
+	.tagline {
+		justify-self: center;
+		font-weight: 500;
+		font-size: 16px;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+	}
+
 	.bullets {
 		margin: 50px 0;
 		width: 380px;
 		display: grid;
 		gap: 10px;
-		font-size: 22px;
-		text-shadow: 2px 2px 2px black;
+		font-size: 20px;
+		text-wrap: pretty;
 	}
 
 	.bullet-item {
@@ -53,15 +78,26 @@
 
 	.bullet {
 		background: var(--cream);
-		border-radius: 50%;
-		height: 5px;
+		height: 9px;
 		aspect-ratio: 1;
-		translate: 0 10px;
+		translate: 0 8px;
 		box-shadow: 2px 2px 2px black;
 	}
 
+	.bullet-1 {
+		background: var(--teal);
+	}
+
+	.bullet-2 {
+		background: var(--gold);
+	}
+
+	.bullet-3 {
+		background: var(--pink);
+	}
+
 	.text {
-        line-height: 1.1em;
+		line-height: 1.2em;
 		letter-spacing: 0.04em;
 	}
 </style>

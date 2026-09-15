@@ -11,13 +11,16 @@
 			padding: 0;
 			height: 100dvh;
 			width: 100%;
-			font-family: RC;
+			font-family: Oswald;
 
 			--bg: #123456;
-			--ink: #abcdef;
+			--ink: #b6cfe4;
 			--water: #2c3a49;
+			--dark: #0a1a18;
 			--cream: #f0e9d9;
-			--gold: #f5db94;
+			--teal: #2fb3a8;
+			--gold: #f2b134;
+			--pink: #e0457b;
 			background: var(--bg);
 			color: var(--ink);
 		}
@@ -59,6 +62,16 @@
 
 		.ga11 {
 			grid-area: 1/1;
+		}
+
+		@font-face {
+			font-family: Archivo;
+			src: url('$lib/fonts/Archivo.ttf');
+		}
+
+		@font-face {
+			font-family: Oswald;
+			src: url('$lib/fonts/Oswald.ttf');
 		}
 
 		@font-face {
