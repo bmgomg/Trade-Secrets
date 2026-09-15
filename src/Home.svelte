@@ -65,10 +65,6 @@
 		place-content: center;
 	}
 
-	img {
-		justify-self: center;
-	}
-
 	.hero {
 		gap: 10px;
 		grid: repeat(3, 60px) / repeat(3, 60px);
