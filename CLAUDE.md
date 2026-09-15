@@ -10,6 +10,9 @@ Full decision history: [docs/design-notes.md](docs/design-notes.md).
 
 - `trade-secrets.jsx` — the latest prototype. Self-contained: dictionary, generator, par calculation, UI.
   Treat it as the reference for rules and puzzle math, not as the architecture to keep.
+- `src/lib/puzzle/` — standalone generator/solver (no UI): `rules.js` (win, taps, legal + relaxed floor),
+  `generator.js` (seeded deal, difficulty ranges, puzzle codes, bank), `solver.js` (player models), `puzzle.test.js`.
+- `scripts/puzzle-stats.js`, `scripts/puzzle-bank.js` — `npm run puzzle:stats`, `npm run puzzle:bank -- --out=…`.
 
 ## Rules (current, agreed)
 

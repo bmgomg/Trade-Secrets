@@ -1,0 +1,62 @@
+// node --test src/lib/puzzle
+
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { createRng, decodePuzzle, encodePuzzle, generate, isSolved, makeBank, searchFloor, solve, tapPair } from './index.js';
+
+test('generation is deterministic per seed', () => {
+	assert.equal(encodePuzzle(generate({ seed: 'x' })), encodePuzzle(generate({ seed: 'x' })));
+	assert.deepEqual(makeBank({ count: 20, seed: 7 }), makeBank({ count: 20, seed: 7 }));
+});
+
+test('generated puzzles follow the deal rules and round-trip through codes', () => {
+	const rng = createRng(1);
+
+	for (let i = 0; i < 200; i++) {
+		const p = generate({ rng });
+		assert.ok(!isSolved(p.tiles));
+		assert.ok(p.relaxedFloor >= 3 && p.floor >= p.relaxedFloor);
+		assert.equal(p.par, p.relaxedFloor + 2);
+		assert.ok(p.spanning.length <= 2);
+		assert.deepEqual(decodePuzzle(encodePuzzle(p)), p);
+	}
+});
+
+test('difficulty targeting', () => {
+	const rng = createRng(2);
+
+	for (let i = 0; i < 20; i++) {
+		assert.equal(generate({ rng, floor: [6, 6] }).floor, 6);
+		assert.equal(generate({ rng, par: [5, 5] }).par, 5);
+	}
+});
+
+test('legal floor matches breadth-first search', () => {
+	const rng = createRng(3);
+
+	for (let i = 0; i < 60; i++) {
+		const p = generate({ rng, relaxed: [0, Infinity] });
+		assert.equal(p.floor, searchFloor(p.tiles), encodePuzzle(p));
+	}
+});
+
+test('same-color taps are refused', () => {
+	const tiles = decodePuzzle('BAT-DOG-ELF:012345678').tiles;
+	assert.equal(tapPair(tiles, 0, 1), tiles);
+	assert.notEqual(tapPair(tiles, 0, 3), tiles);
+});
+
+test('oracle solver scores exactly the legal floor; player models always finish', () => {
+	const rng = createRng(4);
+
+	for (let i = 0; i < 40; i++) {
+		const p = generate({ rng });
+		assert.equal(solve(p, { oracle: true, seed: i }).swaps, p.floor);
+
+		for (const strategy of ['expect', 'guess']) {
+			const r = solve(p, { strategy, seed: i });
+			assert.ok(r.solved, `${strategy} ${encodePuzzle(p)}`);
+			assert.ok(r.swaps >= p.floor && r.taps >= r.swaps);
+		}
+	}
+});

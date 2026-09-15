@@ -9,7 +9,10 @@
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"lint": "eslint . && prettier --check .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"test:puzzle": "node --test src/lib/puzzle/puzzle.test.js",
+		"puzzle:stats": "node scripts/puzzle-stats.js",
+		"puzzle:bank": "node scripts/puzzle-bank.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.4.0",
