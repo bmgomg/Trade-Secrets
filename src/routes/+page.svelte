@@ -1,7 +1,7 @@
 <script>
 	import Frame from '../Frame.svelte';
-	// import GamePage from '../Game Page.svelte';
-	// import Home from '../Home.svelte';
+	import GamePage from '../Game Page.svelte';
+	import Home from '../Home.svelte';
 	import Splash from '../Splash.svelte';
 	import { DX, DY } from '../const';
 	import { _sound } from '../sound.svelte';
@@ -76,8 +76,8 @@
 		<div class="vignette"></div>
 		<div id="app-content" style="scale: {scale};">
 			<Frame />
-			<!-- <GamePage /> -->
-			<!-- <Home /> -->
+			<GamePage />
+			<Home />
 		</div>
 	{/if}
 </div>

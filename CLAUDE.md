@@ -1,6 +1,6 @@
 # Trade Secrets
 
-*Every peek is a move.*
+*Every peek risks a move.*
 
 A word/logic/memory puzzle. Prototyped as a single React artifact in a claude.ai chat
 (https://claude.ai/chat/52a536df-0dc9-4e3d-ac12-c9bf4fd046be); the real game will be built in Svelte.

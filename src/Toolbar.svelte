@@ -1,6 +1,6 @@
 <script>
 	import { PROMPT_RESET_STATS, PROMPT_SURRENDER } from './const';
-	import { persistCommon, showPrompt, ss } from './shared.svelte';
+	import { persistCommon, ss } from './shared.svelte';
 	import { _sound } from './sound.svelte';
 	import TextButton from './Text Button.svelte';
 
@@ -13,11 +13,11 @@
 	};
 
 	const onSurrender = () => {
-		showPrompt(PROMPT_SURRENDER);
+		// showPrompt(PROMPT_SURRENDER);
 	};
 
 	const onResetStats = () => {
-		showPrompt(PROMPT_RESET_STATS);
+		// showPrompt(PROMPT_RESET_STATS);
 	};
 
 	const onSfx = () => {

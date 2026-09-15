@@ -60,8 +60,7 @@
 	}
 
 	.button:hover {
-		color: black;
-		filter: drop-shadow(0 0 5px var(--gold));
+		filter: brightness(1.1);
 	}
 
 	.disabled {

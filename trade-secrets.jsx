@@ -26,7 +26,7 @@ function isSolved(cells) {
   const r = rows(cells);
   if (!r.every((w) => DICT_SET.has(w))) return false;
   // Each row must also be a single color: the right words, split the right way.
-  // Row order doesn't matter — the board snaps into alphabetical order on the win.
+  // Row order doesn't matter.
   for (let i = 0; i < 9; i += 3) {
     if (cells[i].color !== cells[i + 1].color) return false;
     if (cells[i].color !== cells[i + 2].color) return false;
@@ -91,17 +91,6 @@ function winningTargets(cells) {
         }
       }
   return out;
-}
-
-/** Put the finished rows in alphabetical order for the reveal. */
-function snapRows(cells) {
-  const rs = [0, 3, 6].map((i) => cells.slice(i, i + 3));
-  rs.sort((a, b) => {
-    const x = a.map((c) => c.letter).join("");
-    const y = b.map((c) => c.letter).join("");
-    return x < y ? -1 : 1;
-  });
-  return rs.flat();
 }
 
 /** Fewest swaps from cells to target, matching on letter AND color. */
@@ -203,7 +192,6 @@ export default function TradeSecrets() {
   useEffect(() => {
     if (!won && !quit && isSolved(game.cells) && probes > 0) {
       setWon(true);
-      setGame((g) => ({ ...g, cells: snapRows(g.cells) }));
     }
   }, [game, won, quit, probes]);
 
@@ -267,7 +255,7 @@ export default function TradeSecrets() {
 
       <header className="ts-head">
         <h1>Trade Secrets</h1>
-        <p className="ts-tag">Every peek is a move.</p>
+        <p className="ts-tag">Every peek risks a move.</p>
         <p>
           Three words hide in this grid, one color each. Tap two letters to see
           their colors. Different colors trade places; matching colors stay

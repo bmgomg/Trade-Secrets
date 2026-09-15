@@ -1,7 +1,7 @@
 {
-	"name": "•••",
-	"short_name": "•••",
-	"description": "•••",
+	"name": "Trade Secrets",
+	"short_name": "Trade Secrets",
+	"description": "Trade Secrets",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",

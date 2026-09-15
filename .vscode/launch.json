@@ -7,14 +7,20 @@
       "name": "Edge",
       "request": "launch",
       "type": "msedge",
-      "url": "http://localhost:1111",
-      "webRoot": "${workspaceFolder}"
+      "url": "http://localhost:1129",
+      "webRoot": "${workspaceFolder}",
+      // Edge restarts itself through its compat layer ~70ms after launch, which
+      // kills the CDP pipe the debugger inherited and makes the debugger think
+      // the browser died ("Unable to attach to browser" / "Could not find any
+      // debuggable target"). This is the flag Edge adds to its own relaunch;
+      // passing it up front means it never relaunches.
+      "runtimeArgs": ["--edge-skip-compat-layer-relaunch"]
     },
     {
       "type": "chrome",
       "request": "launch",
       "name": "Chrome",
-      "url": "http://localhost:1111",
+      "url": "http://localhost:1129",
       "webRoot": "${workspaceFolder}"
     }
   ]

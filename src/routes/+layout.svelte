@@ -13,9 +13,11 @@
 			width: 100%;
 			font-family: RC;
 
-			--bg: #000;
-			--ink: #fff;
+			--bg: #123456;
+			--ink: #abcdef;
 			--water: #2c3a49;
+			--cream: #f0e9d9;
+			--gold: #f5db94;
 			background: var(--bg);
 			color: var(--ink);
 		}
