@@ -83,5 +83,5 @@ export const onTradeComplete = () => {
     persist();
 
     // the tiles stay lit through the flip, then go dark
-    post(() => delete ss.trade, FLIP_MS);
+    post(() => delete ss.trade, FLIP_MS + 200);
 };

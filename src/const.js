@@ -10,4 +10,4 @@ export const MSG_BEST_SCORE = 'Best score!';
 export const COLORS = ['teal', 'gold', 'pink'];
 export const TILE_SIZE = 100;
 export const GAP = 10;
-export const FLIP_MS = 700;
+export const FLIP_MS = 500;
