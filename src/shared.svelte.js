@@ -1,5 +1,5 @@
 import { generate } from '$lib/puzzle';
-import { APP_STATE } from './const';
+import { APP_STATE, COLORS } from './const';
 import { _sound } from './sound.svelte';
 
 export const newStats = () => ({ plays: 0, total: 0, best: 0 });

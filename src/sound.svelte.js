@@ -40,7 +40,6 @@ export const _sound = $state({
             howl.volume(volume);
         }
     },
-    tap: () => howl.play('tap'),
     playMusic: () => {
         if (!_sound.musicPlayed) {
             _sound.musicPlayed = true;
@@ -54,6 +53,10 @@ export const _sound = $state({
     }
 });
 
-export const whoosh = () => _sound.play('link1', { rate: 0.8 });
+export const sfx = (chime, rate) => _sound.play(chime, { rate: rate ?? 1 });
 
-export const swhoosh = () => _sound.play('link2', { rate: 0.8 });
+export const tap = () => sfx('tap');
+
+export const whoosh = () => sfx('link1', 0.8);
+
+export const swhoosh = () => sfx('link2', 0.8);
