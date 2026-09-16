@@ -1,6 +1,6 @@
 import { generate } from '$lib/puzzle';
 import { APP_STATE, COLORS, FLIP_MS } from './const';
-import { _sound } from './sound.svelte';
+import { _sound, sfx } from './sound.svelte';
 import { post } from './utils';
 
 export const newStats = () => ({ plays: 0, total: 0, best: 0 });
@@ -81,6 +81,8 @@ export const doTrade = () => {
     [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
 
     persist();
+
+    post(() => sfx('cluck'), FLIP_MS);
 
     // the tiles stay lit through the flip, then go dark
     post(() => delete ss.trade, FLIP_MS + 200);

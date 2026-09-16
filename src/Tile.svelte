@@ -1,7 +1,7 @@
 <script>
 	import { TILE_SIZES } from './const';
 	import { bg, doTrade, ss } from './shared.svelte';
-	import { tap } from './sound.svelte';
+	import { sfx, tap } from './sound.svelte';
 	import { post } from './utils';
 
 	const { tile } = $props();
@@ -12,18 +12,19 @@
 	const nope = $derived(selected || trading);
 
 	const onTap = () => {
-		tap();
-
 		ss.trade ??= [];
 		ss.trade.push(tile);
 
 		if (ss.trade?.length !== 2) {
+			sfx('click');
 			return;
 		}
 
 		if (ss.trade[0].color === ss.trade[1].color) {
-			post(() => delete ss.trade, 1000);
+			sfx('cluck');
+			post(() => delete ss.trade, 800);
 		} else {
+			sfx('click');
 			post(doTrade, 500);
 		}
 	};
