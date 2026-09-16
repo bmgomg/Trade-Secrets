@@ -72,7 +72,7 @@ export const bg = id => {
     return 'var(--' + COLORS[i] + ')';
 };
 
-export const onTradeComplete = () => {
+export const doTrade = () => {
     const { tiles } = ss.pzl;
 
     const i = tiles.indexOf(ss.trade[0]);

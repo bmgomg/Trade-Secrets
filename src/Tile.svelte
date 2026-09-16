@@ -1,6 +1,6 @@
 <script>
 	import { TILE_SIZE } from './const';
-	import { bg, onTradeComplete, ss } from './shared.svelte';
+	import { bg, doTrade, ss } from './shared.svelte';
 	import { tap } from './sound.svelte';
 	import { post } from './utils';
 
@@ -17,8 +17,14 @@
 		ss.trade ??= [];
 		ss.trade.push(tile);
 
-		if (ss.trade?.length === 2) {
-			post(onTradeComplete, 500);
+		if (ss.trade?.length !== 2) {
+			return;
+		}
+
+		if (ss.trade[0].color === ss.trade[1].color) {
+			post(() => delete ss.trade, 1000);
+		} else {
+			post(doTrade, 500);
 		}
 	};
 </script>
