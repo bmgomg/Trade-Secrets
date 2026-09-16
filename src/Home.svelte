@@ -19,6 +19,8 @@
 		'Solve in as few trades as possible.'
 	];
 
+	const LINE = `Sixteen letters hide four words, one ${hi}secret color</span> each.`;
+
 	const style =
 		'font-size: 24px; width: 100%; padding: 10px 0; background: var(--teal); color: var(--dark); letter-spacing: 3px; font-weight: 600; border-radius: 999px;';
 </script>
@@ -35,8 +37,16 @@
 			{#each _range(1, BULLETS.length) as id (id)}
 				<div class="bullet-item">
 					<div class="bullet bg-{((id - 1) % 3) + 1}"></div>
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-					<div class="text">{@html BULLETS[id - 1]}</div>
+					{#if id === 1}
+						{#key ss.size}
+							{@const line = ss.size === 4 ? LINE : BULLETS[id - 1]}
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+							<div class="text" in:fade>{@html line}</div>
+						{/key}
+					{:else}
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						<div class="text">{@html BULLETS[id - 1]}</div>
+					{/if}
 				</div>
 			{/each}
 		</div>
