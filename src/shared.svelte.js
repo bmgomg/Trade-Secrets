@@ -70,3 +70,7 @@ export const bg = id => {
     const i = (id - 1) % 3;
     return 'var(--' + COLORS[i] + ')';
 };
+
+export const onTradeComplete = () => {
+    delete ss.trade;
+};

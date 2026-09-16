@@ -1,6 +1,6 @@
 <script>
-	import { TILE_SIZE } from './const';
-	import { bg, ss } from './shared.svelte';
+	import { GAP, TILE_SIZE } from './const';
+	import { bg, onTradeComplete, ss } from './shared.svelte';
 	import { tap } from './sound.svelte';
 	import { post, rowCol } from './utils';
 
@@ -12,7 +12,7 @@
 	const nope = $derived(selected || trading);
 
 	const off = $derived.by(() => {
-		if (!trading || !ss.trade.includes(tile)) {
+		if (!trading || !selected) {
 			return { x: 0, y: 0 };
 		}
 
@@ -24,7 +24,8 @@
 		i = ss.pzl.tiles.indexOf(other);
 		const { row: r2, col: c2 } = rowCol(i);
 
-		return { x: (c2 - c1) * 110, y: (r2 - r1) * 110 };
+        const sz = TILE_SIZE + GAP;
+		return { x: (c2 - c1) * sz, y: (r2 - r1) * sz };
 	});
 
 	const onTap = () => {
@@ -34,11 +35,11 @@
 		ss.trade.push(tile);
 
 		if (ss.trade?.length === 2) {
-			post(() => delete ss.trade, 1000);
+			post(onTradeComplete, 1200);
 		}
 	};
 
-	const style = $derived(`translate: ${off.x}px ${off.y}px;`);
+	const style = $derived(`translate: ${off.x}px ${off.y}px; z-index: ${selected ? 1 : 0}`);
 </script>
 
 <div id={'tile-' + tile.id} class="tile grid" class:nope {style} onpointerdown={onTap}>
@@ -63,8 +64,6 @@
 		font-size: 40px;
 		font-weight: 800;
 		color: var(--ice);
-		transition:
-			background-color 0.2s,
-			color 0.2s;
+		transition: all 0.5s;
 	}
 </style>
