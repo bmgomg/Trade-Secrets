@@ -81,10 +81,3 @@ export const shuffleInPlace = (array) => {
 
     return array;
 };
-
-export const rowCol = (i, size = 3) => {
-    const row = Math.floor(i / size) + 1;
-    const col = i % size + 1;
-
-    return { row, col };
-};

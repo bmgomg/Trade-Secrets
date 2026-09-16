@@ -85,3 +85,10 @@ export const doTrade = () => {
     // the tiles stay lit through the flip, then go dark
     post(() => delete ss.trade, FLIP_MS + 200);
 };
+
+export const rowCol = (i, size = ss.size) => {
+    const row = Math.floor(i / size) + 1;
+    const col = i % size + 1;
+
+    return { row, col };
+};
