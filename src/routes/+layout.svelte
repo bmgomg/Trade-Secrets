@@ -21,6 +21,7 @@
 			--teal: #2fb3a8;
 			--gold: #f2b134;
 			--pink: #e0457b;
+			--violet: #8e7ce6;
 			background: var(--bg);
 			color: var(--ink);
 		}
@@ -82,6 +83,10 @@
 
 		.bg-3 {
 			background: var(--pink);
+		}
+
+		.bg-4 {
+			background: var(--violet);
 		}
 
 		@font-face {

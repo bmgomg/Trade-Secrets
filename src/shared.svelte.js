@@ -9,6 +9,7 @@ export const ss = $state({
     stats: newStats(),
     home: true,
     scale: 1,
+    size: 3,
     pzl: {},
 });
 
@@ -17,7 +18,7 @@ const appKey = $derived(APP_STATE + ' • ' + '???');
 export const _log = (value) => console.log($state.snapshot(value));
 
 export const persistCommon = () => {
-    const json = JSON.stringify({ sfx: _sound.sfx, music: _sound.music });
+    const json = JSON.stringify({ size: ss.size, sfx: _sound.sfx, music: _sound.music });
     localStorage.setItem(APP_STATE, json);
 };
 
@@ -26,6 +27,7 @@ export const loadCommon = () => {
     const job = JSON.parse(json);
 
     if (job) {
+        ss.size = job.size;
         _sound.sfx = job.sfx;
         _sound.music = job.music;
     }
@@ -65,10 +67,8 @@ export const onPlay = () => {
     persist();
 };
 
-export const cid = id => (id - 1) % 3 + 1;
-
 export const bg = id => {
-    const i = (id - 1) % 3;
+    const i = (id - 1) % 4;
     return 'var(--' + COLORS[i] + ')';
 };
 

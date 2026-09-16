@@ -1,9 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { cid, loadCommon, onPlay, ss } from './shared.svelte';
+	import { loadCommon, onPlay, ss } from './shared.svelte';
 	import TextButton from './Text Button.svelte';
 	import { _range } from './utils';
+	import Hero from './Hero.svelte';
 
 	onMount(loadCommon);
 
@@ -18,18 +19,6 @@
 		'Solve in as few trades as possible.'
 	];
 
-	const TILES = [
-		{ ch: 'Y', bg: 1 },
-		{ ch: 'G', bg: 2 },
-		{ ch: 'A', bg: 3 },
-		{ ch: 'P', bg: 1 },
-		{ ch: 'S', bg: 1 },
-		{ ch: 'I', bg: 2 },
-		{ ch: 'N', bg: 2 },
-		{ ch: 'D', bg: 3 },
-		{ ch: 'F', bg: 3 }
-	];
-
 	const style =
 		'font-size: 24px; width: 100%; padding: 10px 0; background: var(--teal); color: var(--dark); letter-spacing: 3px; font-weight: 600; border-radius: 999px;';
 </script>
@@ -38,16 +27,14 @@
 	<div class="home ga11 nohi" in:fade={{ duration: 200 }}>
 		<div class="title">Trade Secrets</div>
 		<div class="tagline">Every peek risks a move</div>
-		<div class="hero psc grid">
-			{#each _range(1, 9) as i (i)}
-				{@const tile = TILES[i - 1]}
-				<div class="tile grid bg-{tile.bg}">{tile.ch}</div>
-			{/each}
+		<div class="heros grid flowcol psc">
+			<Hero size={3} />
+			<Hero size={4} />
 		</div>
 		<div class="bullets">
 			{#each _range(1, BULLETS.length) as id (id)}
 				<div class="bullet-item">
-					<div class="bullet bg-{cid(id)}"></div>
+					<div class="bullet bg-{((id - 1) % 3) + 1}"></div>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					<div class="text">{@html BULLETS[id - 1]}</div>
 				</div>
@@ -64,18 +51,8 @@
 		place-content: center;
 	}
 
-	.hero {
-		gap: 10px;
-		grid: repeat(3, 60px) / repeat(3, 60px);
-	}
-
-	.tile {
-		border-radius: 9px;
-		place-content: center;
-		font-family: Archivo;
-		font-weight: 800;
-		font-size: 28px;
-		color: var(--dark);
+	.heros {
+		gap: 30px;
 	}
 
 	.title {
