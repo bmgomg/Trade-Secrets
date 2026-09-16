@@ -1,3 +1,4 @@
+import { generate } from '$lib/puzzle';
 import { APP_STATE } from './const';
 import { _sound } from './sound.svelte';
 
@@ -7,6 +8,7 @@ export const ss = $state({
     stats: newStats(),
     home: true,
     scale: 1,
+    pzl: {},
 });
 
 const appKey = $derived(APP_STATE + ' • ' + '???');
@@ -50,4 +52,21 @@ export const loadGame = () => {
     }
 
     return false;
+};
+
+export const onPlay = () => {
+    delete ss.home;
+
+    const pzl = generate();
+    ss.words = pzl.wordsByColor;
+    ss.pzl.tiles = pzl.tiles;
+
+    persist();
+};
+
+export const cid = id => (id - 1) % 3 + 1;
+
+export const bg = id => {
+    const i = (id - 1) % 3;
+    return 'var(--' + COLORS[i] + ')';
 };

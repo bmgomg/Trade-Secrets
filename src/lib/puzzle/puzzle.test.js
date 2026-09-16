@@ -41,7 +41,7 @@ test('legal floor matches breadth-first search', () => {
 });
 
 test('same-color taps are refused', () => {
-	const tiles = decodePuzzle('BAT-DOG-ELF:012345678').tiles;
+	const tiles = decodePuzzle('BAT-DOG-ELF:123456789').tiles;
 	assert.equal(tapPair(tiles, 0, 1), tiles);
 	assert.notEqual(tapPair(tiles, 0, 3), tiles);
 });

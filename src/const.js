@@ -7,3 +7,4 @@ export const PROMPT_RESET_STATS = 'Reset stats?';
 export const PROMPT_NO = 'No';
 export const MSG_AVERAGE_IMPROVED = 'Average improved!';
 export const MSG_BEST_SCORE = 'Best score!';
+export const COLORS = ['teal', 'yellow', 'pink'];

@@ -1,4 +1,5 @@
 <script>
+	import Board from './Board.svelte';
 	import { ss } from './shared.svelte';
 	import Toolbar from './Toolbar.svelte';
 </script>
@@ -6,7 +7,7 @@
 <div class="game-page ga11" class:show={!ss.home}>
 	<!-- <Stats /> -->
 	<!-- <Scoreboard /> -->
-	<!-- <Board /> -->
+	<Board />
 	<!-- <Launcher /> -->
 	<!-- <Message/> -->
 	<!-- <Prompt/> -->

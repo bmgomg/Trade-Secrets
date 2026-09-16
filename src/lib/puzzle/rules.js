@@ -1,6 +1,6 @@
 // Board rules and exact move counts.
 //
-// A board is 9 tiles in reading order, each { id, letter, color } with color 0..2.
+// A board is 9 tiles in reading order, each { id, letter, color } with id 1..9 and color 1..3.
 // Tile ids are stable across swaps (index in the solved layout), so a UI can animate by id.
 
 import { ANAGRAMS, DICT_SET, sortKey } from './dict.js';
@@ -72,7 +72,7 @@ export const floors = (letters, colors) => {
 	const groups = [[], [], []];
 
 	for (let p = 0; p < CELLS; p++) {
-		groups[colors[p]].push(letters[p]);
+		groups[colors[p] - 1].push(letters[p]);
 	}
 
 	const words = groups.map((g) => (g.length === SIDE ? ANAGRAMS.get(sortKey(g)) : undefined));
@@ -109,7 +109,7 @@ export const floors = (letters, colors) => {
 			}
 
 			if (len > 1 && pure) {
-				mono[colors[i]]++;
+				mono[colors[i] - 1]++;
 			}
 		}
 
@@ -145,7 +145,7 @@ export const floors = (letters, colors) => {
 					order.forEach((c, r) => {
 						for (let k = 0; k < SIDE; k++) {
 							tl[r * SIDE + k] = byColor[c][k];
-							tc[r * SIDE + k] = c;
+							tc[r * SIDE + k] = c + 1;
 						}
 					});
 

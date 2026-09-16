@@ -20,23 +20,22 @@ import { createRng } from './rng.js';
 import { CELLS, floors } from './rules.js';
 
 const LABELINGS = [
-	[0, 1, 2],
-	[0, 2, 1],
-	[1, 0, 2],
-	[1, 2, 0],
-	[2, 0, 1],
-	[2, 1, 0]
+	[1, 2, 3],
+	[1, 3, 2],
+	[2, 1, 3],
+	[2, 3, 1],
+	[3, 1, 2],
+	[3, 2, 1]
 ];
 
 /** Every colors-by-tile-id array in which each color's three tiles spell a word. */
-export const colorHypotheses = (letterById) => {
+export const colorHypotheses = (letterById, all) => {
 	const isWord = (ids) => ANAGRAMS.has(sortKey(ids.map((id) => letterById[id])));
 	const out = [];
-	const all = [...Array(CELLS).keys()];
 
 	for (let i = 1; i < CELLS; i++) {
 		for (let j = i + 1; j < CELLS; j++) {
-			const t0 = [0, i, j];
+			const t0 = [all[0], all[i], all[j]];
 
 			if (!isWord(t0)) {
 				continue;
@@ -54,7 +53,7 @@ export const colorHypotheses = (letterById) => {
 					}
 
 					for (const lab of LABELINGS) {
-						const h = new Array(CELLS);
+						const h = [];
 						[t0, t1, t2].forEach((t, g) => t.forEach((id) => (h[id] = lab[g])));
 						out.push(h);
 					}
@@ -93,7 +92,10 @@ export const solve = (
 	}
 
 	const at = puzzle.tiles.map((t) => t.id); // position -> tile id
-	const hypotheses = colorHypotheses(letterById);
+	const hypotheses = colorHypotheses(
+		letterById,
+		puzzle.tiles.map((t) => t.id).sort((x, y) => x - y)
+	);
 	const history = []; // tile ids revealed per tap pair
 	const cache = new Map();
 	const log = trace ? [] : undefined;
@@ -103,8 +105,8 @@ export const solve = (
 	// legal floor of the board `ids` if colors were `h`; color labels are canonicalized for the cache
 	const cost = (h, ids) => {
 		const letters = ids.map((id) => letterById[id]);
-		const relabel = [-1, -1, -1];
-		let n = 0;
+		const relabel = [-1, -1, -1, -1];
+		let n = 1;
 		const colors = ids.map((id) => (relabel[h[id]] < 0 ? (relabel[h[id]] = n++) : relabel[h[id]]));
 		const key = letters.join('') + colors.join('');
 
@@ -229,7 +231,7 @@ export const solve = (
 
 		// expected value of tapping a first, summed over the colors it might show
 		const firstTapValue = (a) => {
-			const byColor = [[], [], []];
+			const byColor = [[], [], [], []];
 			all.forEach((i) => byColor[live[i][at[a]]].push(i));
 
 			return byColor.filter((ids) => ids.length).reduce((s, ids) => s + partner(a, ids, uncertain(a)).score, 0);

@@ -72,6 +72,18 @@
 			place-self: center;
 		}
 
+		.bg-1 {
+			background: var(--teal);
+		}
+
+		.bg-2 {
+			background: var(--gold);
+		}
+
+		.bg-3 {
+			background: var(--pink);
+		}
+
 		@font-face {
 			font-family: Archivo;
 			src: url('$lib/fonts/Archivo.ttf');

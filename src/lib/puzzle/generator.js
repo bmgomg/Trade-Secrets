@@ -7,7 +7,9 @@ export const PAR_OFFSET = 2;
 
 export const parFor = (relaxedFloor) => relaxedFloor + PAR_OFFSET;
 
-const solvedTiles = (wordsByColor) => wordsByColor.flatMap((w, c) => [...w].map((letter, k) => ({ id: c * SIDE + k, letter, color: c })));
+// ids and colors are 1-based; a tile's id is its position in the solved layout, reading order
+const solvedTiles = (wordsByColor) =>
+	wordsByColor.flatMap((w, c) => [...w].map((letter, k) => ({ id: c * SIDE + k + 1, letter, color: c + 1 })));
 
 const inRange = (v, min, max) => v >= min && v <= max;
 
@@ -80,7 +82,7 @@ export const decodePuzzle = (code) => {
 	const [w, ids] = code.split(':');
 	const wordsByColor = w.split('-');
 	const solved = solvedTiles(wordsByColor);
-	const tiles = [...ids].map((id) => solved[+id]);
+	const tiles = [...ids].map((id) => solved[+id - 1]);
 	if (tiles.length !== CELLS || tiles.some((t) => !t)) {
 		throw new Error(`Bad puzzle code: ${code}`);
 	}
