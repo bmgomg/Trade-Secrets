@@ -72,5 +72,14 @@ export const bg = id => {
 };
 
 export const onTradeComplete = () => {
+    const { tiles } = ss.pzl;
+
+    const i = tiles.indexOf(ss.trade[0]);
+    const j = tiles.indexOf(ss.trade[1]);
+
+    [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+
+    persist();
+
     delete ss.trade;
 };
