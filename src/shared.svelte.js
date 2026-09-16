@@ -60,7 +60,7 @@ export const loadGame = () => {
 export const onPlay = () => {
     delete ss.home;
 
-    const pzl = generate();
+    const pzl = generate({ size: ss.size });
     ss.words = pzl.wordsByColor;
     ss.pzl.tiles = pzl.tiles;
 

@@ -1,3 +1,5 @@
+import { dict4 } from './dict4.js';
+
 // 459 words: the original dict3.js (424) plus 35 common additions (see CLAUDE.md).
 export const DICT = (
 	'ACE ACT ADD ADO AGE AGO AHA AID AIL AIM AIR ALE ALL AMP AND ANT ANY APE APP APT ARC ARE ARK ARM ART ASH ASK ASS ATE AWE AXE AYE ' +
@@ -21,14 +23,30 @@ export const DICT = (
 	'YAK YAM YAP YEN YES YET YOU ZAP ZEN ZIP ZOO'
 ).split(' ');
 
-export const DICT_SET = new Set(DICT);
-
 export const sortKey = (letters) => [...letters].sort().join('');
 
-// sorted letters -> words spelled by them, e.g. 'ABT' -> ['BAT', 'TAB']
-export const ANAGRAMS = new Map();
+// words, a set of them, and sorted letters -> words spelled by them (e.g. 'ABT' -> ['BAT', 'TAB'])
+const lexicon = (words) => {
+	const anagrams = new Map();
 
-for (const w of DICT) {
-	const k = sortKey(w);
-	ANAGRAMS.has(k) ? ANAGRAMS.get(k).push(w) : ANAGRAMS.set(k, [w]);
-}
+	for (const w of words) {
+		const k = sortKey(w);
+		anagrams.has(k) ? anagrams.get(k).push(w) : anagrams.set(k, [w]);
+	}
+
+	return { words, set: new Set(words), anagrams };
+};
+
+// grid size -> lexicon of words that long
+export const LEXICONS = { 3: lexicon(DICT), 4: lexicon(dict4) };
+
+export const lexiconFor = (size) => {
+	if (!LEXICONS[size]) {
+		throw new Error(`No dictionary for size ${size}`);
+	}
+
+	return LEXICONS[size];
+};
+
+export const DICT_SET = LEXICONS[3].set;
+export const ANAGRAMS = LEXICONS[3].anagrams;

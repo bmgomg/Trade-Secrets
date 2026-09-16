@@ -8,7 +8,7 @@ export const PROMPT_NO = 'No';
 export const MSG_AVERAGE_IMPROVED = 'Average improved!';
 export const MSG_BEST_SCORE = 'Best score!';
 export const COLORS = ['teal', 'gold', 'pink', 'violet'];
-export const TILE_SIZE = 100;
+export const TILE_SIZES = [100, 90];
 export const GAP = 10;
 export const FLIP_MS = 500;
 

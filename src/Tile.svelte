@@ -1,5 +1,5 @@
 <script>
-	import { TILE_SIZE } from './const';
+	import { TILE_SIZES } from './const';
 	import { bg, doTrade, ss } from './shared.svelte';
 	import { tap } from './sound.svelte';
 	import { post } from './utils';
@@ -30,7 +30,7 @@
 </script>
 
 <div id={'tile-' + tile.id} class="tile grid" class:nope onpointerdown={onTap}>
-	<div class="inner grid" style="width: {TILE_SIZE}px; background: {background}; color: {color};">
+	<div class="inner grid" style="width: {TILE_SIZES[ss.size - 3]}px; background: {background}; color: {color};">
 		{tile.letter}
 	</div>
 </div>

@@ -2,7 +2,7 @@
 
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { createRng, decodePuzzle, encodePuzzle, generate, isSolved, makeBank, searchFloor, solve, tapPair } from './index.js';
+import { MAX_SPANNING, createRng, decodePuzzle, encodePuzzle, generate, isSolved, makeBank, searchFloor, solve, tapPair } from './index.js';
 
 test('generation is deterministic per seed', () => {
 	assert.equal(encodePuzzle(generate({ seed: 'x' })), encodePuzzle(generate({ seed: 'x' })));
@@ -31,12 +31,35 @@ test('difficulty targeting', () => {
 	}
 });
 
-test('legal floor matches breadth-first search', () => {
+test('legal floor matches search', () => {
 	const rng = createRng(3);
 
 	for (let i = 0; i < 60; i++) {
 		const p = generate({ rng, relaxed: [0, Infinity] });
 		assert.equal(p.floor, searchFloor(p.tiles), encodePuzzle(p));
+	}
+});
+
+test('4×4: deal rules, codes, legal floor matches search, player model finishes', () => {
+	const rng = createRng(5);
+
+	for (let i = 0; i < 20; i++) {
+		const p = generate({ size: 4, rng });
+		assert.equal(p.tiles.length, 16);
+		assert.ok(!isSolved(p.tiles));
+		assert.ok(p.spanning.length <= MAX_SPANNING[4]);
+		assert.deepEqual(decodePuzzle(encodePuzzle(p)), p);
+	}
+
+	for (let i = 0; i < 4; i++) {
+		const p = generate({ size: 4, rng, relaxed: [0, 5] });
+		assert.equal(p.floor, searchFloor(p.tiles), encodePuzzle(p));
+	}
+
+	for (let i = 0; i < 3; i++) {
+		const p = generate({ size: 4, rng });
+		assert.equal(solve(p, { oracle: true, strategy: 'guess', seed: i }).swaps, p.floor);
+		assert.ok(solve(p, { strategy: 'guess', seed: i }).solved, encodePuzzle(p));
 	}
 });
 

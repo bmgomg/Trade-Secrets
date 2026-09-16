@@ -1,30 +1,39 @@
 // Board rules and exact move counts.
 //
-// A board is 9 tiles in reading order, each { id, letter, color } with id 1..9 and color 1..3.
-// Tile ids are stable across swaps (index in the solved layout), so a UI can animate by id.
+// A board of size n (3 or 4) is n² tiles in reading order, each { id, letter, color } with
+// id 1..n² and color 1..n. Tile ids are stable across swaps (position in the solved layout),
+// so a UI can animate by id.
 
-import { ANAGRAMS, DICT_SET, sortKey } from './dict.js';
+import { lexiconFor, sortKey } from './dict.js';
 
-export const SIDE = 3;
-export const CELLS = 9;
+export const SIZES = [3, 4];
 
-const ROW_ORDERS = [
-	[0, 1, 2],
-	[0, 2, 1],
-	[1, 0, 2],
-	[1, 2, 0],
-	[2, 0, 1],
-	[2, 1, 0]
-];
+export const sizeOf = (tiles) => Math.round(Math.sqrt(tiles.length));
 
-export const rowWords = (tiles) => [0, 3, 6].map((i) => tiles[i].letter + tiles[i + 1].letter + tiles[i + 2].letter);
+const permutations = (items) =>
+	items.length <= 1 ? [items] : items.flatMap((x, i) => permutations([...items.slice(0, i), ...items.slice(i + 1)]).map((p) => [x, ...p]));
+
+const ROW_ORDERS = Object.fromEntries(SIZES.map((n) => [n, permutations([...Array(n).keys()])]));
+
+export const rowWords = (tiles) => {
+	const n = sizeOf(tiles);
+	return [...Array(n).keys()].map((r) =>
+		tiles
+			.slice(r * n, r * n + n)
+			.map((t) => t.letter)
+			.join('')
+	);
+};
 
 /** Win: every row is a dictionary word in a single color. Row order doesn't matter. */
 export const isSolved = (tiles) => {
-	for (let i = 0; i < CELLS; i += SIDE) {
-		const [a, b, c] = [tiles[i], tiles[i + 1], tiles[i + 2]];
+	const n = sizeOf(tiles);
+	const { set } = lexiconFor(n);
 
-		if (a.color !== b.color || a.color !== c.color || !DICT_SET.has(a.letter + b.letter + c.letter)) {
+	for (let r = 0; r < n; r++) {
+		const row = tiles.slice(r * n, r * n + n);
+
+		if (row.some((t) => t.color !== row[0].color) || !set.has(row.map((t) => t.letter).join(''))) {
 			return false;
 		}
 	}
@@ -59,41 +68,47 @@ export const spanningLetters = (words) => {
 
 /**
  * Fewest swaps to any winning arrangement, given perfect color knowledge.
- * `letters` and `colors` are per-position arrays (length 9).
+ * `letters` and `colors` are per-position arrays (length n²).
  *
  * Returns both measures:
  * - floor: legal swaps only. A same-color pair can't trade, so every cycle of the tile
  *   permutation that is a single color costs 2 extra (it must be merged with a cycle of
  *   another color first), less 2 for each pair of such cycles of different colors that
  *   can be merged with each other.
- * - relaxed: 9 − cycles, as if any two tiles could trade (the prototype's "floor").
+ * - relaxed: n² − cycles, as if any two tiles could trade (the prototype's "floor").
  */
 export const floors = (letters, colors) => {
-	const groups = [[], [], []];
+	const cells = letters.length;
+	const n = Math.round(Math.sqrt(cells));
+	const { anagrams } = lexiconFor(n);
+	const groups = Array.from({ length: n }, () => []);
 
-	for (let p = 0; p < CELLS; p++) {
+	for (let p = 0; p < cells; p++) {
 		groups[colors[p] - 1].push(letters[p]);
 	}
 
-	const words = groups.map((g) => (g.length === SIDE ? ANAGRAMS.get(sortKey(g)) : undefined));
+	const words = groups.map((g) => (g.length === n ? anagrams.get(sortKey(g)) : undefined));
 
 	if (words.some((w) => !w)) {
 		return { floor: Infinity, relaxed: Infinity };
 	}
 
-	const tl = new Array(CELLS);
-	const tc = new Array(CELLS);
-	const f = new Array(CELLS);
-	const used = new Array(CELLS);
+	const tl = new Array(cells);
+	const tc = new Array(cells);
+	const f = new Array(cells);
+	const used = new Array(cells);
+	const seen = new Array(cells);
+	const mono = new Array(n);
 	let floor = Infinity;
 	let relaxed = Infinity;
 
 	const leaf = () => {
-		const seen = new Array(CELLS).fill(false);
-		const mono = [0, 0, 0];
+		seen.fill(false);
+		mono.fill(0);
 		let cycles = 0;
+		let m = 0;
 
-		for (let i = 0; i < CELLS; i++) {
+		for (let i = 0; i < cells; i++) {
 			if (seen[i]) {
 				continue;
 			}
@@ -110,23 +125,23 @@ export const floors = (letters, colors) => {
 
 			if (len > 1 && pure) {
 				mono[colors[i] - 1]++;
+				m++;
 			}
 		}
 
-		const m = mono[0] + mono[1] + mono[2];
 		const pairs = Math.min(m >> 1, m - Math.max(...mono));
 
-		relaxed = Math.min(relaxed, CELLS - cycles);
-		floor = Math.min(floor, CELLS - cycles + 2 * (m - pairs));
+		relaxed = Math.min(relaxed, cells - cycles);
+		floor = Math.min(floor, cells - cycles + 2 * (m - pairs));
 	};
 
 	// assign each position to a target slot holding the same letter and color
 	const assign = (p) => {
-		if (p === CELLS) {
+		if (p === cells) {
 			return leaf();
 		}
 
-		for (let q = 0; q < CELLS; q++) {
+		for (let q = 0; q < cells; q++) {
 			if (!used[q] && tl[q] === letters[p] && tc[q] === colors[p]) {
 				used[q] = true;
 				f[p] = q;
@@ -136,23 +151,20 @@ export const floors = (letters, colors) => {
 		}
 	};
 
-	for (const w0 of words[0]) {
-		for (const w1 of words[1]) {
-			for (const w2 of words[2]) {
-				const byColor = [w0, w1, w2];
+	// one word per color, from each color's anagrams
+	const combos = words.reduce((acc, ws) => acc.flatMap((c) => ws.map((w) => [...c, w])), [[]]);
 
-				for (const order of ROW_ORDERS) {
-					order.forEach((c, r) => {
-						for (let k = 0; k < SIDE; k++) {
-							tl[r * SIDE + k] = byColor[c][k];
-							tc[r * SIDE + k] = c + 1;
-						}
-					});
-
-					used.fill(false);
-					assign(0);
+	for (const byColor of combos) {
+		for (const order of ROW_ORDERS[n]) {
+			order.forEach((c, r) => {
+				for (let k = 0; k < n; k++) {
+					tl[r * n + k] = byColor[c][k];
+					tc[r * n + k] = c + 1;
 				}
-			}
+			});
+
+			used.fill(false);
+			assign(0);
 		}
 	}
 
@@ -165,34 +177,67 @@ export const tileFloors = (tiles) =>
 		tiles.map((t) => t.color)
 	);
 
-/** Breadth-first search over legal swaps. Slow; used to verify `floors`. */
-export const searchFloor = (tiles, limit = 14) => {
+/**
+ * Exact fewest legal swaps by iterative-deepening A*, with the relaxed floor as the heuristic
+ * (it's admissible: one swap changes it by at most 1). Independent of the monochrome-cycle
+ * reasoning in `floors`, so it's used to verify it. Slow on hard 4×4 boards.
+ */
+export const searchFloor = (tiles, limit = 24) => {
+	const cells = tiles.length;
 	const key = (ts) => ts.map((t) => t.letter + t.color).join('');
-	let frontier = [tiles];
-	const seen = new Set([key(tiles)]);
+	const hCache = new Map();
 
-	for (let depth = 0; depth <= limit; depth++) {
-		const next = [];
+	const h = (ts, k) => {
+		if (!hCache.has(k)) {
+			hCache.set(k, tileFloors(ts).relaxed);
+		}
 
-		for (const ts of frontier) {
-			if (isSolved(ts)) {
-				return depth;
+		return hCache.get(k);
+	};
+
+	let bound = h(tiles, key(tiles));
+
+	while (bound <= limit) {
+		const bestG = new Map();
+		let next = Infinity;
+
+		const dfs = (ts, g) => {
+			const k = key(ts);
+			const est = g + h(ts, k);
+
+			if (est > bound) {
+				next = Math.min(next, est);
+				return false;
 			}
 
-			for (let a = 0; a < CELLS; a++) {
-				for (let b = a + 1; b < CELLS; b++) {
-					const moved = tapPair(ts, a, b);
-					const k = key(moved);
+			if (est === g) {
+				return true; // relaxed floor 0 = solved
+			}
 
-					if (moved !== ts && !seen.has(k)) {
-						seen.add(k);
-						next.push(moved);
+			if (bestG.get(k) <= g) {
+				return false;
+			}
+
+			bestG.set(k, g);
+
+			for (let a = 0; a < cells; a++) {
+				for (let b = a + 1; b < cells; b++) {
+					const moved = tapPair(ts, a, b);
+
+					if (moved !== ts && dfs(moved, g + 1)) {
+						return true;
 					}
 				}
 			}
+
+			return false;
+		};
+
+		if (dfs(tiles, 0)) {
+			return bound;
 		}
 
-		frontier = next;
+		bound = next;
 	}
 
 	return Infinity;

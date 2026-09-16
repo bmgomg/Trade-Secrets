@@ -1,7 +1,7 @@
 // Player-model solver: sees letters and knows the dictionary, but learns colors only by tapping.
 //
 // Each turn it keeps every color hypothesis consistent with what it remembers (a split of the
-// nine tiles into three words, with a color per word), all equally likely. Under a hypothesis h,
+// tiles into words, with a color per word), all equally likely. Under a hypothesis h,
 // tapping pair (a, b) is worth: 1 + floor_h(board after swap) if h gives them different colors,
 // else floor_h(board). A progress swap and a refusal both keep the value at floor_h; a bad swap
 // costs 1 or 2 more.
@@ -15,55 +15,89 @@
 // expected floor — the solver can't cycle (with full memory).
 // Ties prefer tiles whose color is uncertain, then random.
 
-import { ANAGRAMS, sortKey } from './dict.js';
+import { lexiconFor, sortKey } from './dict.js';
 import { createRng } from './rng.js';
-import { CELLS, floors } from './rules.js';
+import { SIZES, floors } from './rules.js';
 
-const LABELINGS = [
-	[1, 2, 3],
-	[1, 3, 2],
-	[2, 1, 3],
-	[2, 3, 1],
-	[3, 1, 2],
-	[3, 2, 1]
-];
+const permutations = (items) =>
+	items.length <= 1 ? [items] : items.flatMap((x, i) => permutations([...items.slice(0, i), ...items.slice(i + 1)]).map((p) => [x, ...p]));
 
-/** Every colors-by-tile-id array in which each color's three tiles spell a word. */
-export const colorHypotheses = (letterById, all) => {
-	const isWord = (ids) => ANAGRAMS.has(sortKey(ids.map((id) => letterById[id])));
+// size -> every assignment of colors 1..n to the n words
+const LABELINGS = Object.fromEntries(SIZES.map((n) => [n, permutations([...Array(n).keys()].map((c) => c + 1))]));
+
+/**
+ * Every way to split the tiles into words, as group-by-tile-id arrays (group 0 holds the lowest id).
+ * `ids` are all tile ids. Colors aren't assigned yet: each split stands for n! color hypotheses.
+ */
+export const wordSplits = (letterById, ids) => {
+	const n = Math.round(Math.sqrt(ids.length));
+	const { anagrams } = lexiconFor(n);
+	const isWord = (group) => anagrams.has(sortKey(group.map((id) => letterById[id])));
 	const out = [];
+	const groups = [];
 
-	for (let i = 1; i < CELLS; i++) {
-		for (let j = i + 1; j < CELLS; j++) {
-			const t0 = [all[0], all[i], all[j]];
-
-			if (!isWord(t0)) {
-				continue;
-			}
-
-			const rem = all.filter((id) => !t0.includes(id));
-
-			for (let k = 1; k < rem.length; k++) {
-				for (let l = k + 1; l < rem.length; l++) {
-					const t1 = [rem[0], rem[k], rem[l]];
-					const t2 = rem.filter((id) => !t1.includes(id));
-
-					if (!isWord(t1) || !isWord(t2)) {
-						continue;
-					}
-
-					for (const lab of LABELINGS) {
-						const h = [];
-						[t0, t1, t2].forEach((t, g) => t.forEach((id) => (h[id] = lab[g])));
-						out.push(h);
-					}
-				}
-			}
+	// the lowest remaining id goes in the next group, with n − 1 others
+	const split = (rest) => {
+		if (!rest.length) {
+			const s = [];
+			groups.forEach((g, i) => g.forEach((id) => (s[id] = i)));
+			out.push(s);
+			return;
 		}
-	}
+
+		const choose = (start, group) => {
+			if (group.length === n) {
+				if (isWord(group)) {
+					groups.push(group);
+					split(rest.filter((id) => !group.includes(id)));
+					groups.pop();
+				}
+
+				return;
+			}
+
+			for (let i = start; i < rest.length; i++) {
+				choose(i + 1, [...group, rest[i]]);
+			}
+		};
+
+		choose(1, [rest[0]]);
+	};
+
+	split(ids);
 
 	return out;
 };
+
+// color per group, as fixed by `known` (tile id -> color); null if the split contradicts it
+const groupColors = (s, known, n) => {
+	const fixed = new Array(n).fill(0);
+
+	for (const [id, c] of known) {
+		if (fixed[s[id]] && fixed[s[id]] !== c) {
+			return null;
+		}
+
+		fixed[s[id]] = c;
+	}
+
+	return new Set(fixed.filter(Boolean)).size === fixed.filter(Boolean).length ? fixed : null;
+};
+
+/** Colors-by-tile-id arrays for split `s` that agree with `known` (tile id -> color). */
+export const labelSplit = (s, known = new Map()) => {
+	const n = Math.max(...s.filter((g) => g !== undefined)) + 1;
+	const fixed = groupColors(s, known, n);
+
+	if (!fixed) {
+		return [];
+	}
+
+	return LABELINGS[n].filter((lab) => lab.every((c, g) => !fixed[g] || fixed[g] === c)).map((lab) => s.map((g) => lab[g]));
+};
+
+/** Every colors-by-tile-id array in which each color's tiles spell a word. */
+export const colorHypotheses = (letterById, ids, known) => wordSplits(letterById, ids).flatMap((s) => labelSplit(s, known));
 
 /**
  * Plays a puzzle ({ tiles }) to the win.
@@ -83,6 +117,8 @@ export const solve = (
 	puzzle,
 	{ strategy = 'expect', seed, rng = createRng(seed), memory = Infinity, oracle = false, maxTaps = 200, trace = false } = {}
 ) => {
+	const cells = puzzle.tiles.length;
+	const n = Math.round(Math.sqrt(cells));
 	const letterById = [];
 	const colorById = [];
 
@@ -91,11 +127,16 @@ export const solve = (
 		colorById[t.id] = t.color;
 	}
 
+	if (strategy === 'expect' && n > 3 && !oracle) {
+		throw new Error(`The 'expect' strategy is too slow for ${n}×${n}; use 'guess'`);
+	}
+
 	const at = puzzle.tiles.map((t) => t.id); // position -> tile id
-	const hypotheses = colorHypotheses(
+	const splits = wordSplits(
 		letterById,
 		puzzle.tiles.map((t) => t.id).sort((x, y) => x - y)
 	);
+	let pool = splits; // with full memory, splits consistent with everything seen so far only shrink
 	const history = []; // tile ids revealed per tap pair
 	const cache = new Map();
 	const log = trace ? [] : undefined;
@@ -105,9 +146,9 @@ export const solve = (
 	// legal floor of the board `ids` if colors were `h`; color labels are canonicalized for the cache
 	const cost = (h, ids) => {
 		const letters = ids.map((id) => letterById[id]);
-		const relabel = [-1, -1, -1, -1];
-		let n = 1;
-		const colors = ids.map((id) => (relabel[h[id]] < 0 ? (relabel[h[id]] = n++) : relabel[h[id]]));
+		const relabel = new Array(n + 1).fill(-1);
+		let next = 1;
+		const colors = ids.map((id) => (relabel[h[id]] < 0 ? (relabel[h[id]] = next++) : relabel[h[id]]));
 		const key = letters.join('') + colors.join('');
 
 		if (!cache.has(key)) {
@@ -135,6 +176,9 @@ export const solve = (
 
 	const consistent = (h, known) => [...known].every(([id, c]) => h[id] === c);
 
+	// no win fired, so a hypothesis under which the board is already solved is wrong
+	const possible = (h) => cost(h, at) > 0;
+
 	// lowest score wins; ties prefer an uncertain tile, then random
 	const argmin = (candidates, score, uncertain) => {
 		let top = [];
@@ -153,7 +197,7 @@ export const solve = (
 		return { pick: rng.pick(top), score: topScore >> 1 };
 	};
 
-	const positions = [...Array(CELLS).keys()];
+	const positions = [...Array(cells).keys()];
 
 	const swapCost = (h, a, b) => {
 		const moved = at.slice();
@@ -164,15 +208,26 @@ export const solve = (
 	// 'guess': commit to one random hypothesis and play toward it; re-guess when a color contradicts it
 	let guess = null;
 
-	const guessTurn = (live) => {
+	// a random hypothesis agreeing with `known`, among `live` splits
+	const pickGuess = (live, known) => {
+		for (const s of rng.shuffle(live)) {
+			const h = rng.shuffle(labelSplit(s, known)).find(possible);
+
+			if (h) {
+				return h;
+			}
+		}
+	};
+
+	const guessTurn = (live, known) => {
 		const progress = (h) => {
 			const base = cost(h, at);
 			const pairs = [];
 
-			for (const a of positions) {
-				for (const b of positions) {
+			for (let a = 0; a < cells; a++) {
+				for (let b = a + 1; b < cells; b++) {
 					if (h[at[a]] !== h[at[b]] && swapCost(h, a, b) < base) {
-						pairs.push([a, b]);
+						pairs.push([a, b], [b, a]);
 					}
 				}
 			}
@@ -180,14 +235,18 @@ export const solve = (
 			return pairs;
 		};
 
-		if (!live.includes(guess)) {
-			guess = rng.pick(live);
+		if (!guess || !consistent(guess, known) || !possible(guess)) {
+			guess = pickGuess(live, known);
 		}
 
 		const a = rng.pick([...new Set(progress(guess).map(([p]) => p))]);
 
 		if (guess[at[a]] !== colorById[at[a]]) {
-			guess = rng.pick(live.filter((h) => h[at[a]] === colorById[at[a]]));
+			const revealed = new Map(known).set(at[a], colorById[at[a]]);
+			guess = pickGuess(
+				live.filter((s) => groupColors(s, revealed, n)),
+				revealed
+			);
 		}
 
 		const partners = progress(guess)
@@ -202,14 +261,14 @@ export const solve = (
 		const bases = live.map((h) => cost(h, at));
 		const expected = bases.reduce((s, c) => s + c, 0); // summed over live, like the values below
 
-		// value[i][a * 9 + b] under live[i]
+		// value[i][a * cells + b] under live[i]
 		const value = live.map((h, i) => {
-			const v = new Array(CELLS * CELLS).fill(bases[i]);
+			const v = new Array(cells * cells).fill(bases[i]);
 
-			for (let a = 0; a < CELLS; a++) {
-				for (let b = a + 1; b < CELLS; b++) {
+			for (let a = 0; a < cells; a++) {
+				for (let b = a + 1; b < cells; b++) {
 					if (h[at[a]] !== h[at[b]]) {
-						v[a * CELLS + b] = v[b * CELLS + a] = 1 + swapCost(h, a, b);
+						v[a * cells + b] = v[b * cells + a] = 1 + swapCost(h, a, b);
 					}
 				}
 			}
@@ -226,12 +285,12 @@ export const solve = (
 			const sameColor = (q) => ids.every((i) => live[i][at[q]] === live[i][at[a]]);
 			const candidates = positions.filter((q) => q !== a && (aWasUncertain || !sameColor(q)));
 
-			return argmin(candidates, (q) => ids.reduce((s, i) => s + value[i][a * CELLS + q], 0), uncertainIn(ids));
+			return argmin(candidates, (q) => ids.reduce((s, i) => s + value[i][a * cells + q], 0), uncertainIn(ids));
 		};
 
 		// expected value of tapping a first, summed over the colors it might show
 		const firstTapValue = (a) => {
-			const byColor = [[], [], [], []];
+			const byColor = Array.from({ length: n + 1 }, () => []);
 			all.forEach((i) => byColor[live[i][at[a]]].push(i));
 
 			return byColor.filter((ids) => ids.length).reduce((s, ids) => s + partner(a, ids, uncertain(a)).score, 0);
@@ -249,9 +308,13 @@ export const solve = (
 
 	while (!solvedNow() && taps < maxTaps) {
 		const known = remembered();
-		// no win fired, so any hypothesis under which the board is already solved is wrong
-		const live = hypotheses.filter((h) => consistent(h, known) && cost(h, at) > 0);
-		const [a, b] = strategy === 'guess' ? guessTurn(live) : expectTurn(live);
+		const live = (memory === Infinity ? pool : splits).filter((s) => groupColors(s, known, n));
+
+		if (memory === Infinity) {
+			pool = live;
+		}
+
+		const [a, b] = strategy === 'guess' ? guessTurn(live, known) : expectTurn(live.flatMap((s) => labelSplit(s, known)).filter(possible));
 		const swapped = colorById[at[a]] !== colorById[at[b]];
 
 		if (swapped) {
@@ -261,8 +324,8 @@ export const solve = (
 
 		taps++;
 		history.push([at[a], at[b]]);
-		log?.push({ a, b, swapped, hypotheses: live.length });
+		log?.push({ a, b, swapped, splits: live.length });
 	}
 
-	return { solved: solvedNow(), swaps, taps, ...(trace && { trace: log }) };
+	return { solved: solvedNow(), swaps, taps, splits: splits.length, ...(trace && { trace: log }) };
 };
