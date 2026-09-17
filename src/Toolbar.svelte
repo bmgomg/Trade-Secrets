@@ -9,6 +9,8 @@
 
 	const onHome = () => {
 		delete ss.prompt;
+		delete ss.over;
+		
 		ss.home = true;
 	};
 

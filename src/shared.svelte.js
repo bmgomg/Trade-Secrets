@@ -1,4 +1,4 @@
-import { generate } from '$lib/puzzle';
+import { generate, isSolved } from '$lib/puzzle';
 import { APP_STATE, COLORS, FLIP_MS } from './const';
 import { _sound, sfx } from './sound.svelte';
 import { post } from './utils';
@@ -64,6 +64,8 @@ export const onPlay = () => {
     ss.words = pzl.wordsByColor;
     ss.pzl.tiles = pzl.tiles;
 
+    sfx('dice');
+
     persist();
 };
 
@@ -80,9 +82,19 @@ export const doTrade = () => {
 
     [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
 
+    if (isSolved(tiles)) {
+        ss.over = 'won';
+    }
+
     persist();
 
-    post(() => sfx('cluck'), FLIP_MS);
+    post(() => {
+        sfx('cluck');
+
+        if (ss.over) {
+            post(() => sfx('won'), 500);
+        }
+    }, FLIP_MS);
 
     // the tiles stay lit through the flip, then go dark
     post(() => delete ss.trade, FLIP_MS + 200);

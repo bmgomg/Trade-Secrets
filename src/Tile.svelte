@@ -1,15 +1,16 @@
 <script>
 	import { TILE_SIZES } from './const';
 	import { bg, doTrade, ss } from './shared.svelte';
-	import { sfx, tap } from './sound.svelte';
+	import { sfx } from './sound.svelte';
 	import { post } from './utils';
 
 	const { tile } = $props();
 	const selected = $derived(ss.trade?.includes(tile));
-	const background = $derived(selected ? bg(tile.color) : 'var(--water)');
-	const color = $derived(selected ? 'var(--dark)' : 'var(--ice)');
+	const reveal = $derived(selected || ss.over);
+	const background = $derived(reveal ? bg(tile.color) : 'var(--water)');
+	const color = $derived(reveal ? 'var(--dark)' : 'var(--ice)');
 	const trading = $derived(ss.trade?.length === 2);
-	const nope = $derived(selected || trading);
+	const nope = $derived(reveal || trading);
 
 	const onTap = () => {
 		ss.trade ??= [];
