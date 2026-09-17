@@ -88,8 +88,8 @@
 			<Frame />
 			<GamePage />
 			<Home />
+			<WordList />
 		</div>
-		<WordList />
 	{/if}
 </div>
 
@@ -112,6 +112,7 @@
 	}
 
 	#app-content {
+		position: relative;
 		grid-area: 1/1;
 		place-self: center;
 		display: grid;

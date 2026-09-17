@@ -59,7 +59,7 @@
 <div class="toolbar">
 	<ToolButton src={Home} onClick={onHome} />
 	<ToolButton src={Surrender} onClick={onSurrender} disabled={noSurrender} />
-	<ToolButton src={Dictionary} onClick={onDictionary} />
+	<ToolButton id="tb-wordlist" src={Dictionary} onClick={onDictionary} />
 	<ToolButton src={Stats} onClick={onResetStats} disabled={noResetStats} />
 	<ToolButton id="tb-sfx" src={_sound.sfx ? SoundOn : SoundOff} sound={false} onClick={onSfx} />
 	<ToolButton id="tb-music" src={_sound.music ? MusicOn : MusicOff} onClick={onMusic} />

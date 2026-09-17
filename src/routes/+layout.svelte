@@ -104,5 +104,10 @@
 			font-family: RC;
 			src: url('$lib/fonts/Roboto Condensed.ttf');
 		}
+
+		@font-face {
+			font-family: RM;
+			src: url('$lib/fonts/Roboto Mono.ttf');
+		}
 	}
 </style>

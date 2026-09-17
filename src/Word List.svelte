@@ -2,39 +2,25 @@
 	import { dict3 } from '$lib/puzzle/dict3';
 	import { dict4 } from '$lib/puzzle/dict4';
 	import { fade } from 'svelte/transition';
-	import { clientRect, scrollClass } from './utils';
 	import { ss } from './shared.svelte';
 
 	const d3 = [...dict3].sort();
 	const d4 = [...dict4].sort();
 
-	let style = $state('');
 	let dict = $state(d3);
 	const wordlen = $derived(dict[0].length);
-
-	$effect(() => {
-		const onResize = () => {
-			const r = clientRect('.game-page');
-			style = `left: ${r.x - 5}px; top: ${r.y}px; width: ${r.width + 10}px; height: ${r.height - 70}px;`;
-		};
-
-		onResize();
-
-		window.addEventListener('resize', onResize);
-		return () => window.removeEventListener('resize', onResize);
-	});
 
 	const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 </script>
 
 {#if ss.showDictionary}
-	<div class="wordlist" {style} transition:fade={{ duration: 200 }}>
+	<div class="wordlist" transition:fade={{ duration: 200 }}>
 		<div class="selector">
 			<div class="selector-item {wordlen === 3 ? 'selected' : ''}" onpointerdown={() => (dict = d3)}>3</div>
 			<div class="selector-item {wordlen === 4 ? 'selected' : ''}" onpointerdown={() => (dict = d4)}>4</div>
 		</div>
 		{#each [d3, d4] as d, i (i)}
-			<div class="content {scrollClass()} {wordlen === i + 3 ? '' : 'hidden'}" tabindex="-1">
+			<div class="content {wordlen === i + 3 ? '' : 'hidden'}" tabindex="-1">
 				{#each ABC as ch (ch)}
 					{@const words = d.filter((word) => word.startsWith(ch))}
 					{#if words.length}
@@ -54,13 +40,14 @@
 <style>
 	.wordlist {
 		position: absolute;
+		/* 20px inside app-content; the bottom stops above the toolbar (50px buttons + 20px margin) */
+		inset: 25px 25px 90px;
 		z-index: 3;
-		justify-self: center;
 		display: grid;
-		grid: auto 1fr / auto;
+		grid: auto minmax(0, 1fr) / minmax(0, 1fr);
 		padding: 18px 10px 18px;
 		box-sizing: border-box;
-		font-family: Poppins;
+		font-family: Archivo;
 		font-size: 14px;
 		background: #000000c0;
 		border: 2px solid #c5e2ffc0;
@@ -82,7 +69,8 @@
 	.selector-item {
 		display: grid;
 		place-content: center;
-		background: var(--lightblue);
+		background: var(--ink);
+		color: var(--bg);
 		opacity: 0.7;
 		font-weight: bold;
 		border-radius: 50%;
@@ -106,6 +94,11 @@
 	.content {
 		grid-area: 2/1;
 		padding-right: 10px;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		touch-action: pan-y;
+		scrollbar-width: thin;
+		scrollbar-color: var(--ink) transparent;
 		display: grid;
 		align-content: start;
 		gap: 5px;
@@ -116,6 +109,7 @@
 
 	.hidden {
 		opacity: 0;
+		pointer-events: none;
 		z-index: 0;
 	}
 
@@ -129,7 +123,8 @@
 		grid-area: 1/1;
 		display: grid;
 		place-content: center;
-		background: var(--lightblue);
+		background: var(--ink);
+		color: var(--bg);
 		opacity: 0.7;
 		font-weight: bold;
 		border-radius: 50%;
@@ -140,7 +135,7 @@
 
 	.section-content {
 		grid-area: 1/2;
-		color: var(--lightblue);
-		font-family: Roboto Mono;
+		color: var(--ink);
+		font-family: RM;
 	}
 </style>

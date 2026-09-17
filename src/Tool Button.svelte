@@ -2,7 +2,7 @@
 	import { _sound } from './sound.svelte';
 	import { post } from './utils';
 
-	const { src, width = 50, disabled, showDisabled = true, opaque = false, sound = true, onClick } = $props();
+	const { id, src, width = 50, disabled, showDisabled = true, opaque = false, sound = true, onClick } = $props();
 
 	let _this = $state();
 	let scale = $state(1);
@@ -46,7 +46,7 @@
 	};
 </script>
 
-<div bind:this={_this} class={classes} onpointerdown={onPointerDown} {style}>
+<div bind:this={_this} {id} class={classes} onpointerdown={onPointerDown} {style}>
 	{#if true}
 		{@const style = 'user-drag: none;'}
 		<img class="img" {style} {src} alt="" {width} />
