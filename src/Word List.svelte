@@ -45,12 +45,12 @@
 		z-index: 3;
 		display: grid;
 		grid: auto minmax(0, 1fr) / minmax(0, 1fr);
-		padding: 18px 10px 18px;
+		padding: 18px 10px 18px 15px;
 		box-sizing: border-box;
 		font-family: Archivo;
 		font-size: 14px;
 		background: #000000c0;
-		border: 2px solid #c5e2ffc0;
+		border: 2px solid #c5e2ffa0;
 		border-radius: 10px;
 		backdrop-filter: blur(10px);
 		filter: drop-shadow(0 0 3px black);
