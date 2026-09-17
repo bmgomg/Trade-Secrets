@@ -4,7 +4,7 @@
 // id 1..n² and color 1..n. Tile ids are stable across swaps (position in the solved layout),
 // so a UI can animate by id.
 
-import { lexiconFor, sortKey } from './dict.js';
+import { isWord, lexiconFor, sortKey } from './dict.js';
 
 export const SIZES = [3, 4];
 
@@ -24,6 +24,9 @@ export const rowWords = (tiles) => {
 			.join('')
 	);
 };
+
+/** Per row, whether its letters spell a dictionary word. Letters only: says nothing about colors. */
+export const wordRows = (tiles) => rowWords(tiles).map(isWord);
 
 /** Win: every row is a dictionary word in a single color. Row order doesn't matter. */
 export const isSolved = (tiles) => {

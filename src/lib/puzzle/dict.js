@@ -48,5 +48,8 @@ export const lexiconFor = (size) => {
 	return LEXICONS[size];
 };
 
+/** True if `word` (any case) is in the 3- or 4-letter dictionary. */
+export const isWord = (word) => !!LEXICONS[word.length]?.set.has(word.toUpperCase());
+
 export const DICT_SET = LEXICONS[3].set;
 export const ANAGRAMS = LEXICONS[3].anagrams;
