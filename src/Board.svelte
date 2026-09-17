@@ -6,7 +6,7 @@
 	import { linear } from 'svelte/easing';
 	import { wordRows } from '$lib/puzzle';
 
-	const valids = $derived(wordRows(ss.pzl.tiles));
+	const valids = $derived(ss.pzl.tiles ? wordRows(ss.pzl.tiles) : []);
 	const repeat = $derived(`repeat(${ss.size}, auto)`);
 </script>
 

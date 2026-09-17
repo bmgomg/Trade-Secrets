@@ -13,6 +13,10 @@
 	const nope = $derived(reveal || trading);
 
 	const onTap = () => {
+		if (ss.trade?.length >= 2) {
+			return;
+		}
+
 		ss.trade ??= [];
 		ss.trade.push(tile);
 

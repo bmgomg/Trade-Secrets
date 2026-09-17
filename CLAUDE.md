@@ -20,7 +20,7 @@ Full decision history: [docs/design-notes.md](docs/design-notes.md).
 - Three 3-letter dictionary words, each with its own **secret color**, are laid out in a 3×3 grid (one word per row) and scrambled.
 - The player taps two tiles. Each tile's color shows **immediately on tap**; the first tap commits (no deselect, or colors could be read for free).
 - **Different colors → the tiles swap. Same color → they stay put.** Either way the colors go dark again.
-- **Win:** every row is a dictionary word **and** a single color. Row order does not matter — on the win the rows snap into alphabetical order for the reveal.
+- **Win:** every row is a dictionary word **and** a single color. Row order does not matter, and rows stay where they are on the win (no alphabetical snap).
   - Consequence: an anagram inside one color group is fine (BAT or TAB from the same three same-colored tiles both win). A different split of the nine letters into words (letters from mixed colors) never wins.
 - **Score = swaps.** Same-color taps are free. Lower is better. "Tapped pairs" is displayed but not scored.
 - **Par = floor + 2**, where *floor* is the fewest swaps to any winning arrangement given perfect color knowledge.

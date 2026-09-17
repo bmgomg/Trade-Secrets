@@ -19,3 +19,4 @@ Condensed from the claude.ai prototyping chat of 2026-09-14
 14. **Swap animations.** Scoped (CSS transform, stable tile ids, same-color nudge) and deferred to the Svelte version.
 15. **Duplicates.** Board DOG/DUG/RUB had 3 letters spanning words (6% of boards). Kept duplicates (they give the colors teeth) but **capped spanning letters at 2**. New distribution: 20% / 48% / 32%. Hazard noted: swapping two identical letters of different colors changes nothing visible.
 16. **Stale build.** A "no win" report was an older artifact version without the any-order change; current code wins.
+17. **No reveal snap.** Rows stay where they are on the win; the alphabetical snap from item 13 is dropped. Row order still doesn't matter.
