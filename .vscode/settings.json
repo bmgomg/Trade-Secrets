@@ -1,8 +1,8 @@
 {
   "workbench.colorCustomizations": /*dark*/ {
-    "titleBar.activeBackground": "#2c3a49",
-    "titleBar.inactiveBackground": "#2c3a49",
-    "tab.inactiveBackground": "#2c3a49A0",
+    "titleBar.activeBackground": "#2c3a59",
+    "titleBar.inactiveBackground": "#2c3a59",
+    "tab.inactiveBackground": "#2c3a59A0",
     "tab.inactiveForeground": "#FFFFFFD0",
     "tab.activeBackground": "#000",
     "sideBar.background": "#203040",

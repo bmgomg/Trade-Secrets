@@ -22,6 +22,7 @@
 			--gold: #f2b134;
 			--pink: #e0457b;
 			--violet: #8e7ce6;
+			--blue: #5a9fec;
 			background: var(--bg);
 			color: var(--ink);
 		}

@@ -10,7 +10,7 @@ Full decision history: [docs/design-notes.md](docs/design-notes.md).
 
 - `trade-secrets.jsx` — the latest prototype. Self-contained: dictionary, generator, par calculation, UI.
   Treat it as the reference for rules and puzzle math, not as the architecture to keep.
-- `src/lib/puzzle/` — standalone generator/solver (no UI), sizes 3 (3×3, `DICT`) and 4 (4×4, `dict4.js`):
+- `src/lib/puzzle/` — standalone generator/solver (no UI), sizes 3 (3×3, `dict3.js`, exported as `DICT`) and 4 (4×4, `dict4.js`):
   `rules.js` (win, taps, legal + relaxed floor), `generator.js` (seeded deal, difficulty ranges, puzzle codes, bank),
   `solver.js` (player models; 'expect' is 3×3 only), `puzzle.test.js`.
 - `scripts/puzzle-stats.js`, `scripts/puzzle-bank.js` — `npm run puzzle:stats`, `npm run puzzle:bank -- --out=…`.

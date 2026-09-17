@@ -3,9 +3,11 @@
 	import GamePage from '../Game Page.svelte';
 	import Home from '../Home.svelte';
 	import Splash from '../Splash.svelte';
+	import WordList from '../Word List.svelte';
 	import { DX, DY } from '../const';
+	import { ss } from '../shared.svelte';
 	import { _sound } from '../sound.svelte';
-	import { clientRect, post } from '../utils';
+	import { clientRect, post, underMouse } from '../utils';
 
 	let scale = $state(1);
 
@@ -67,9 +69,17 @@
 
 	let splash = $state(true);
 	post(() => (splash = false), 2000);
+
+	const onPointerDown = (e) => {
+		if (ss.showDictionary) {
+			if (!underMouse(e, ['.wordlist', '#tb-wordlist', '#tb-sfx', '#tb-music'])) {
+				delete ss.showDictionary;
+			}
+		}
+	};
 </script>
 
-<div id="app" class='nohi'>
+<div id="app" class="nohi" onpointerdown={onPointerDown}>
 	{#if splash}
 		<Splash />
 	{:else}
@@ -79,6 +89,7 @@
 			<GamePage />
 			<Home />
 		</div>
+		<WordList />
 	{/if}
 </div>
 
@@ -94,9 +105,9 @@
 	}
 
 	.vignette {
-        position: absolute;
-        width: 100dvw;
-        height: 100dvh;
+		position: absolute;
+		width: 100dvw;
+		height: 100dvh;
 		background: radial-gradient(transparent, black 150%);
 	}
 

@@ -8,7 +8,7 @@
 	const selected = $derived(ss.trade?.includes(tile));
 	const reveal = $derived(selected || ss.over);
 	const background = $derived(reveal ? bg(tile.color) : 'var(--water)');
-	const color = $derived(reveal ? 'var(--dark)' : inWord ? 'var(--teal)' : 'var(--ice)');
+	const color = $derived(reveal ? 'var(--dark)' : inWord ? 'var(--blue)' : 'var(--ice)');
 	const trading = $derived(ss.trade?.length === 2);
 	const nope = $derived(reveal || trading);
 

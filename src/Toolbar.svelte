@@ -1,8 +1,16 @@
 <script>
+	import Dictionary from '$lib/images/Dictionary.webp';
+	import Home from '$lib/images/Home.webp';
+	import MusicOff from '$lib/images/Music Off.webp';
+	import MusicOn from '$lib/images/Music On.webp';
+	import SoundOff from '$lib/images/Sound Off.webp';
+	import SoundOn from '$lib/images/Sound On.webp';
+	import Stats from '$lib/images/Stats.webp';
+	import Surrender from '$lib/images/Surrender.webp';
 	import { PROMPT_RESET_STATS, PROMPT_SURRENDER } from './const';
 	import { persistCommon, ss } from './shared.svelte';
 	import { _sound } from './sound.svelte';
-	import TextButton from './Text Button.svelte';
+	import ToolButton from './Tool Button.svelte';
 
 	const noSurrender = $derived(ss.over || ss.startPrompt || ss.prompt == PROMPT_SURRENDER);
 	const noResetStats = $derived(ss.stats.plays === 0 || ss.prompt === PROMPT_RESET_STATS);
@@ -10,7 +18,7 @@
 	const onHome = () => {
 		delete ss.prompt;
 		delete ss.over;
-		
+
 		ss.home = true;
 	};
 
@@ -20,6 +28,14 @@
 
 	const onResetStats = () => {
 		// showPrompt(PROMPT_RESET_STATS);
+	};
+
+	const onDictionary = () => {
+		if (ss.showDictionary) {
+			delete ss.showDictionary;
+		} else {
+			ss.showDictionary = true;
+		}
 	};
 
 	const onSfx = () => {
@@ -41,11 +57,12 @@
 </script>
 
 <div class="toolbar">
-	<TextButton text={['  Home  ']} onClick={onHome} />
-	<TextButton text={['  Give  ', 'Up']} disabled={noSurrender} onClick={onSurrender} />
-	<TextButton text={['  Reset  ', 'Stats']} onClick={onResetStats} disabled={noResetStats} />
-	<TextButton text={_sound.sfx ? ['  Sound  ', 'On'] : ['  Sound  ', 'Off']} onClick={onSfx} />
-	<TextButton text={_sound.music ? ['  Music  ', 'On'] : ['  Music  ', 'Off']} onClick={onMusic} />
+	<ToolButton src={Home} onClick={onHome} />
+	<ToolButton src={Surrender} onClick={onSurrender} disabled={noSurrender} />
+	<ToolButton src={Dictionary} onClick={onDictionary} />
+	<ToolButton src={Stats} onClick={onResetStats} disabled={noResetStats} />
+	<ToolButton id="tb-sfx" src={_sound.sfx ? SoundOn : SoundOff} sound={false} onClick={onSfx} />
+	<ToolButton id="tb-music" src={_sound.music ? MusicOn : MusicOff} onClick={onMusic} />
 </div>
 
 <style>
@@ -55,7 +72,7 @@
 		grid-auto-flow: column;
 		place-content: center;
 		align-items: center;
-		gap: 2px;
+		gap: 15px;
 		place-self: end center;
 	}
 </style>
