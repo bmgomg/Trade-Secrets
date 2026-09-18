@@ -11,6 +11,7 @@ export const COLORS = ['teal', 'gold', 'pink', 'violet'];
 export const TILE_SIZES = [100, 90];
 export const GAP = 10;
 export const FLIP_MS = 500;
+export const BRACKETS = [[2, 5, 8, 11], [4, 8, 12, 16]];
 
 export const HERO_TILES = [
     [

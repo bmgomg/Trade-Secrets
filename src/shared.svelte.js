@@ -1,5 +1,5 @@
 import { generate, isSolved } from '$lib/puzzle';
-import { APP_STATE, COLORS, FLIP_MS } from './const';
+import { APP_STATE, BRACKETS, COLORS, FLIP_MS } from './const';
 import { _sound, sfx } from './sound.svelte';
 import { post } from './utils';
 
@@ -60,7 +60,7 @@ export const loadGame = () => {
 export const onPlay = () => {
     delete ss.home;
 
-    const pzl = generate({ size: ss.size });
+    const pzl = generate({ size: ss.size, seed: '2026-09-17' });
     ss.pzl.tiles = pzl.tiles;
     ss.pzl.floor = pzl.floor;
     ss.pzl.trades = 0;
@@ -108,4 +108,21 @@ export const rowCol = (i, size = ss.size) => {
     const col = i % size + 1;
 
     return { row, col };
+};
+
+export const starRating = () => {
+    if (ss.pzl.trades === 0 || !ss.pzl.floor || !ss.over) {
+        return 0;
+    }
+
+    const d = ss.pzl.trades - ss.pzl.floor;
+    const b = BRACKETS[ss.size - 3];
+
+    for (let i = 0; i < b.length; i++) {
+        if (d <= b[i]) {
+            return 5 - i;
+        }
+    }
+
+    return 1;
 };
