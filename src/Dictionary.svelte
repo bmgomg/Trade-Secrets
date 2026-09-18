@@ -14,7 +14,7 @@
 </script>
 
 {#if ss.showDictionary}
-	<div class="wordlist" transition:fade={{ duration: 200 }}>
+	<div class="Dictionary" transition:fade={{ duration: 200 }}>
 		<div class="selector">
 			<div class="selector-item {wordlen === 3 ? 'selected' : ''}" onpointerdown={() => (dict = d3)}>3</div>
 			<div class="selector-item {wordlen === 4 ? 'selected' : ''}" onpointerdown={() => (dict = d4)}>4</div>
@@ -38,7 +38,7 @@
 {/if}
 
 <style>
-	.wordlist {
+	.Dictionary {
 		position: absolute;
 		/* 20px inside app-content; the bottom stops above the toolbar (50px buttons + 20px margin) */
 		inset: 25px 25px 90px;

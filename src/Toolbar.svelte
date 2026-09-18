@@ -56,10 +56,10 @@
 	};
 </script>
 
-<div class="toolbar">
+<div class="toolbar grid">
 	<ToolButton src={Home} onClick={onHome} />
 	<ToolButton src={Surrender} onClick={onSurrender} disabled={noSurrender} />
-	<ToolButton id="tb-wordlist" src={Dictionary} onClick={onDictionary} />
+	<ToolButton id="tb-dict" src={Dictionary} onClick={onDictionary} />
 	<ToolButton src={Stats} onClick={onResetStats} disabled={noResetStats} />
 	<ToolButton id="tb-sfx" src={_sound.sfx ? SoundOn : SoundOff} sound={false} onClick={onSfx} />
 	<ToolButton id="tb-music" src={_sound.music ? MusicOn : MusicOff} onClick={onMusic} />
@@ -67,12 +67,10 @@
 
 <style>
 	.toolbar {
-		display: grid;
-		margin: 0 0 20px;
+		grid-area: 5/1;
+		place-self: start center;
 		grid-auto-flow: column;
-		place-content: center;
 		align-items: center;
 		gap: 15px;
-		place-self: end center;
 	}
 </style>

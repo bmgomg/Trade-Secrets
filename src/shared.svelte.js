@@ -61,8 +61,9 @@ export const onPlay = () => {
     delete ss.home;
 
     const pzl = generate({ size: ss.size });
-    ss.words = pzl.wordsByColor;
     ss.pzl.tiles = pzl.tiles;
+    ss.pzl.floor = pzl.floor;
+    ss.pzl.trades = 0;
 
     sfx('dice');
 
@@ -85,6 +86,8 @@ export const doTrade = () => {
     if (isSolved(tiles)) {
         ss.over = 'won';
     }
+
+    ss.pzl.trades++;
 
     persist();
 

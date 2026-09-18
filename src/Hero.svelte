@@ -8,17 +8,15 @@
 
 	const onTap = () => {
 		ss.size = size;
-        persistCommon();
+		persistCommon();
 	};
 </script>
 
-<div class="hero">
-	<div class="hero grid hero-{size}" class:nope={selected} onpointerdown={onTap}>
-		{#each _range(1, size * size) as i (i)}
-			{@const tile = HERO_TILES[size - 3][i - 1]}
-			<div class="tile-{size} grid bg-{tile.bg}" class:selected>{tile.ch}</div>
-		{/each}
-	</div>
+<div class="hero grid hero-{size}" class:nope={selected} onpointerdown={onTap}>
+	{#each _range(1, size * size) as i (i)}
+		{@const tile = HERO_TILES[size - 3][i - 1]}
+		<div class="grid tile-{size} bg-{tile.bg}" class:selected>{tile.ch}</div>
+	{/each}
 </div>
 
 <style>
@@ -51,7 +49,7 @@
 		filter: grayscale(1);
 		place-content: center;
 		opacity: 0.35;
-        transition: all 0.3s;
+		transition: all 0.3s;
 	}
 
 	.tile-3 {

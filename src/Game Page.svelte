@@ -1,14 +1,16 @@
 <script>
 	import Board from './Board.svelte';
+	import { DY } from './const';
+	import Scoreboard from './Scoreboard.svelte';
 	import { ss } from './shared.svelte';
+	import Stats from './Stats.svelte';
 	import Toolbar from './Toolbar.svelte';
 </script>
 
-<div class="game-page ga11" class:show={!ss.home}>
-	<!-- <Stats /> -->
-	<!-- <Scoreboard /> -->
+<div class="game-page ga11" class:show={!ss.home} style="height: {DY}px;">
+	<Stats />
+	<Scoreboard />
 	<Board />
-	<!-- <Launcher /> -->
 	<!-- <Message/> -->
 	<!-- <Prompt/> -->
 	<Toolbar />
@@ -17,6 +19,7 @@
 <style>
 	.game-page {
 		display: grid;
+		grid: 50px 1fr auto 0.8fr 60px / auto;
 		opacity: 0;
 		transition: opacity 0.2s;
 	}

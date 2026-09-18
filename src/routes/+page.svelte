@@ -3,7 +3,7 @@
 	import GamePage from '../Game Page.svelte';
 	import Home from '../Home.svelte';
 	import Splash from '../Splash.svelte';
-	import WordList from '../Word List.svelte';
+	import Dictionary from '../Dictionary.svelte';
 	import { DX, DY } from '../const';
 	import { ss } from '../shared.svelte';
 	import { _sound } from '../sound.svelte';
@@ -72,7 +72,7 @@
 
 	const onPointerDown = (e) => {
 		if (ss.showDictionary) {
-			if (!underMouse(e, ['.wordlist', '#tb-wordlist', '#tb-sfx', '#tb-music'])) {
+			if (!underMouse(e, ['.Dictionary', '#tb-dict', '#tb-sfx', '#tb-music'])) {
 				delete ss.showDictionary;
 			}
 		}
@@ -88,7 +88,7 @@
 			<Frame />
 			<GamePage />
 			<Home />
-			<WordList />
+			<Dictionary />
 		</div>
 	{/if}
 </div>
@@ -119,5 +119,7 @@
 		touch-action: none;
 		z-index: 1;
 		background: var(--bg);
+		box-sizing: border-box;
+		border: 1px dotted gray;
 	}
 </style>

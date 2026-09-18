@@ -23,6 +23,7 @@
 <style>
 	.board {
 		display: grid;
+		grid-area: 3/1;
 	}
 
 	@keyframes pulse {

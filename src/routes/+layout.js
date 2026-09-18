@@ -1,2 +1,2 @@
 // export const prerender = true;   // uncomment for static
-// export const ssr = false;
+export const ssr = false;
