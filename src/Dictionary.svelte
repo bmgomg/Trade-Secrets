@@ -7,7 +7,15 @@
 	const d3 = [...dict3].sort();
 	const d4 = [...dict4].sort();
 
-	let dict = $derived(ss.size === 3 ? d3 : d4);
+	let size = $state(3);
+	let dict = $derived(size === 3 ? d3 : d4);
+
+	// each time the dictionary pops up, show the one matching the current puzzle size
+	$effect(() => {
+		if (ss.showDictionary) {
+			size = ss.size;
+		}
+	});
 
 	const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 </script>
@@ -15,11 +23,11 @@
 {#if ss.showDictionary}
 	<div class="Dictionary" transition:fade={{ duration: 200 }}>
 		<div class="selector">
-			<div class="selector-item" class:selected={dict === d3} onpointerdown={() => (dict = d3)}>3</div>
-			<div class="selector-item" class:selected={dict === d4} onpointerdown={() => (dict = d4)}>4</div>
+			<div class="selector-item" class:selected={size === 3} onpointerdown={() => (size = 3)}>3</div>
+			<div class="selector-item" class:selected={size === 4} onpointerdown={() => (size = 4)}>4</div>
 		</div>
 		{#each [d3, d4] as d, i (i)}
-			<div class="content" class:hide={d !== dict} tabindex="-1">
+			<div class="content" class:hidden={d !== dict} tabindex="-1">
 				{#each ABC as ch (ch)}
 					{@const words = d.filter((word) => word.startsWith(ch))}
 					{#if words.length}
