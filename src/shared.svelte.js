@@ -60,7 +60,7 @@ export const loadGame = () => {
 export const onPlay = () => {
     delete ss.home;
 
-    const pzl = generate({ size: ss.size, seed: '2026-09-17' });
+    const pzl = generate({ size: ss.size/* , seed: '2026-09-17' */ });
     ss.pzl.tiles = pzl.tiles;
     ss.pzl.floor = pzl.floor;
     ss.pzl.trades = 0;
