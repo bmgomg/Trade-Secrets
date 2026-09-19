@@ -13,7 +13,7 @@
 		</div>
 	{/snippet}
 	{@render score('plays', ss.stats.plays)}
-	{@render score('ave', 0)}
+	{@render score('avg', 0)}
 	{@render score('best', ss.stats.best)}
 </div>
 
