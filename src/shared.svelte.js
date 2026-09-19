@@ -13,7 +13,7 @@ export const ss = $state({
     pzl: {},
 });
 
-const appKey = $derived(APP_STATE + ' • ' + '???');
+const appKey = $derived(APP_STATE + ' • ' + ss.size);
 
 export const _log = (value) => console.log($state.snapshot(value));
 

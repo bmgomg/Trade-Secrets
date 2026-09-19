@@ -80,6 +80,7 @@
 		letter-spacing: 1.5px;
 		text-transform: uppercase;
 		margin-bottom: 45px;
+		opacity: 0.6;
 	}
 
 	.bullets {
