@@ -184,12 +184,13 @@ export const onOver = (won) => {
 };
 
 export const doSurrender = () => {
+    onOver(false);
+
     for (const tile of ss.pzl.tiles) {
         tile.cell = tile.id;
     }
 
     ss.pzl.tiles.sort((t1,t2) => t1.cell - t2.cell);
 
-    persist();
-    onOver(false);
+    // persist();
 };

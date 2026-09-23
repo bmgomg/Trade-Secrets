@@ -27,7 +27,7 @@
 
 	const onSurrender = () => {
 		if (ss.replay) {
-			post(doSurrender, 150);
+			post(doSurrender, 300);
 		} else {
 			setPrompt(PROMPT_SURRENDER);
 		}
