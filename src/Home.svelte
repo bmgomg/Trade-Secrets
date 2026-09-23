@@ -38,11 +38,9 @@
 				<div class="bullet-item">
 					<div class="bullet bg-{((id - 1) % 3) + 1}"></div>
 					{#if id === 1}
-						{#key ss.size}
-							{@const line = ss.size === 4 ? LINE : BULLETS[id - 1]}
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							<div class="text" in:fade>{@html line}</div>
-						{/key}
+						{@const line = ss.size === 4 ? LINE : BULLETS[id - 1]}
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						<div class="text" class:flip={ss.sizeChanged} in:fade>{@html line}</div>
 					{:else}
 						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						<div class="text">{@html BULLETS[id - 1]}</div>
@@ -110,5 +108,10 @@
 		line-height: 1.2em;
 		letter-spacing: 0.04em;
 		color: var(--ice);
+		transition: rotate 0.15s linear;
+	}
+
+	.flip {
+		rotate: x 90deg;
 	}
 </style>
