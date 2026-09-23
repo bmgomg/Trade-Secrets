@@ -1,6 +1,7 @@
 <script>
 	import Board from './Board.svelte';
 	import { DY } from './const';
+	import Prompt from './Prompt.svelte';
 	import Scoreboard from './Scoreboard.svelte';
 	import { ss } from './shared.svelte';
 	import Stats from './Stats.svelte';
@@ -12,7 +13,7 @@
 	<Scoreboard />
 	<Board />
 	<!-- <Message/> -->
-	<!-- <Prompt/> -->
+	<Prompt/>
 	<Toolbar />
 </div>
 

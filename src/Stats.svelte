@@ -1,6 +1,8 @@
 <script>
 	import NumberFlow from '@number-flow/svelte';
 	import { ss } from './shared.svelte';
+
+	const avg = $derived(ss.stats.wins ? (ss.stats.total / ss.stats.plays).toFixed(1) : 0);
 </script>
 
 <div id="stats">
@@ -13,8 +15,8 @@
 		</div>
 	{/snippet}
 	{@render score('plays', ss.stats.plays)}
-	{@render score('avg', 0)}
-	{@render score('best', ss.stats.best)}
+	{@render score('solved', ss.stats.wins)}
+	{@render score('avg', avg)}
 </div>
 
 <style>
@@ -45,6 +47,6 @@
 		font-family: Archivo;
 		font-size: 19px;
 		font-weight: 800;
-        color: var(--ice);
+		color: var(--ice);
 	}
 </style>

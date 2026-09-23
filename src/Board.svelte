@@ -10,20 +10,23 @@
 	const repeat = $derived(`repeat(${ss.size}, auto)`);
 </script>
 
-<div class="board psc" class:pulse={ss.over} style="grid: {repeat} / {repeat}; gap: {GAP}px;">
-	{#each ss.pzl.tiles as tile, i (tile.id)}
-		{@const { row } = rowCol(i, ss.size)}
-		{@const inWord = valids[row - 1]}
-		<div animate:flip={{ duration: FLIP_MS, easing: linear }}>
-			<Tile {tile} {inWord} />
-		</div>
-	{/each}
+<div class="board psc" class:flip={ss.flip} class:pulse={ss.over} style="grid: {repeat} / {repeat}; gap: {GAP}px;">
+	{#key ss.pzl}
+		{#each ss.pzl.tiles as tile, i (tile.id)}
+			{@const { row } = rowCol(i, ss.size)}
+			{@const inWord = valids[row - 1]}
+			<div animate:flip={{ duration: FLIP_MS, easing: linear }}>
+				<Tile {tile} {inWord} />
+			</div>
+		{/each}
+	{/key}
 </div>
 
 <style>
 	.board {
 		display: grid;
 		grid-area: 3/1;
+		transition: rotate 0.5s linear;
 	}
 
 	@keyframes pulse {
@@ -38,5 +41,9 @@
 
 	.pulse {
 		animation: pulse 0.15s linear 6 alternate 0.7s;
+	}
+
+	.flip {
+		rotate: y 90deg;
 	}
 </style>

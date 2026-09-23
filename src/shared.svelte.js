@@ -1,9 +1,9 @@
 import { generate, isSolved } from '$lib/puzzle';
-import { APP_STATE, BRACKETS, COLORS, FLIP_MS } from './const';
+import { APP_STATE, BRACKETS, COLORS, FLIP_MS, PROMPT_PLAY_AGAIN } from './const';
 import { _sound, sfx } from './sound.svelte';
 import { post } from './utils';
 
-export const newStats = () => ({ plays: 0, total: 0, best: 0 });
+export const newStats = () => ({ plays: 0, wins: 0, total: 0 });
 
 export const ss = $state({
     stats: newStats(),
@@ -70,6 +70,7 @@ export const onPlay = () => {
         _sound.playMusic();
     }
 
+    delete ss.over;
     delete ss.home;
 };
 
@@ -78,7 +79,7 @@ export const bg = id => {
     return 'var(--' + COLORS[i] + ')';
 };
 
-export const doTrade = () => {
+const swapTiles = () => {
     const { tiles } = ss.pzl;
 
     const i = tiles.indexOf(ss.trade[0]);
@@ -91,16 +92,17 @@ export const doTrade = () => {
     }
 
     ss.pzl.trades++;
-
     persist();
+};
 
-    post(() => {
-        sfx('cluck');
+export const doTrade = () => {
+    swapTiles();
 
-        if (ss.over) {
-            post(() => sfx('won'), 500);
-        }
-    }, FLIP_MS);
+    post(() => sfx('cluck'), FLIP_MS);
+
+    if (isOver()) {
+        post(() => onOver(true), FLIP_MS + 500);
+    }
 
     // the tiles stay lit through the flip, then go dark
     post(() => delete ss.trade, FLIP_MS + 200);
@@ -130,4 +132,46 @@ export const starRating = () => {
     return 1;
 };
 
+export const setPrompt = prompt => {
+    if (ss.prompt) {
+        delete ss.prompt;
+    }
+
+    post(() => ss.prompt = prompt);
+};
+
 export const isOver = () => isSolved(ss.pzl.tiles);
+
+export const onOver = (won) => {
+    ss.over = won ? 'won' : 'lost';
+
+    if (won) {
+        sfx('won');
+        post(() => setPrompt(PROMPT_PLAY_AGAIN), 1000);
+
+        if (!ss.auto && !ss.replay) {
+            ss.stats.wins++;
+            ss.stats.total += starRating();
+        }
+    } else {
+        sfx('lost');
+        post(() => setPrompt(PROMPT_PLAY_AGAIN), 1200);
+    }
+
+    if (!ss.auto && !ss.replay) {
+        ss.stats.plays++;
+        persist();
+    }
+
+    delete ss.auto;
+    delete ss.replay;
+};
+
+export const doSurrender = () => {
+    for (const tile of ss.pzl.tiles) {
+        tile.cell = tile.id;
+    }
+
+    persist();
+    onOver(false);
+};

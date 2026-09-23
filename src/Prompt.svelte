@@ -9,7 +9,7 @@
 		PROMPT_SHOW_BEST,
 		PROMPT_SURRENDER
 	} from './const';
-	import { doSurrender, isOver, newStats, onAutoPlay, onPlay, onReplay, setPrompt, ss } from './shared.svelte';
+	import { doSurrender, isOver, newStats, onPlay, setPrompt, ss } from './shared.svelte';
 	import { sfx, whoosh } from './sound.svelte';
 	import TextButton from './Text Button.svelte';
 	import { post } from './utils';
@@ -34,7 +34,7 @@
 		ss.flip = true;
 
 		post(() => {
-			onReplay();
+			// onReplay();
 			delete ss.flip;
 		}, 500);
 	};
@@ -62,7 +62,7 @@
 		ss.flip = true;
 
 		post(() => {
-			onAutoPlay();
+			// onAutoPlay();
 			delete ss.flip;
 		}, 500);
 	};
@@ -81,20 +81,20 @@
 	<div class="prompt grid psc flowcol" in:fade={{ duration: 200 }} out:fade={{ duration: 100 }}>
 		{#if ss.prompt === PROMPT_PLAY_AGAIN}
 			{@const s = 'font-size: 18px; padding: 8px 20px 10px; font-weight: 500;'}
-			<div class="panel flowcol" style="gap: 10px;">
+			<div class="grid panel flowcol" style="gap: 10px;">
 				<TextButton text={[PROMPT_REPLAY]} onClick={onRepeatPlay} style={style + s} />
 				<TextButton text={[PROMPT_SHOW_BEST]} onClick={onShowBest} style={style + s} />
 				<TextButton text={[PROMPT_PLAY_NEW]} onClick={onPlayNew} style={style + s} />
 			</div>
 		{:else if ss.prompt === PROMPT_SURRENDER}
 			{@const s = 'font-size: 20px; padding: 8px 25px 10px;'}
-			<div class="panel flowcol">
+			<div class="grid panel flowcol">
 				<TextButton text={[PROMPT_SURRENDER]} onClick={onSurrender} style={style + s} />
 				<TextButton text={[PROMPT_NO]} onClick={dismiss} style={style + s} />
 			</div>
 		{:else if ss.prompt === PROMPT_RESET_STATS}
 			{@const s = 'font-size: 20px; padding: 8px 25px 10px;'}
-			<div class="panel flowcol">
+			<div class="grid panel flowcol">
 				<TextButton text={[PROMPT_RESET_STATS]} onClick={onResetStats} style={style + s} />
 				<TextButton text={[PROMPT_NO]} onClick={dismiss} style={style + s} />
 			</div>
