@@ -58,16 +58,19 @@ export const loadGame = () => {
 };
 
 export const onPlay = () => {
+    if (!loadGame() || isOver()) {
+        const pzl = generate({ size: ss.size/* , seed: '2026-09-17' */ });
+        ss.pzl = { tiles: pzl.tiles, floor: pzl.floor, trades: 0 };
+
+        sfx('dice');
+        persist();
+    }
+
+    if (!_sound.musicPlayed) {
+        _sound.playMusic();
+    }
+
     delete ss.home;
-
-    const pzl = generate({ size: ss.size/* , seed: '2026-09-17' */ });
-    ss.pzl.tiles = pzl.tiles;
-    ss.pzl.floor = pzl.floor;
-    ss.pzl.trades = 0;
-
-    sfx('dice');
-
-    persist();
 };
 
 export const bg = id => {
@@ -83,7 +86,7 @@ export const doTrade = () => {
 
     [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
 
-    if (isSolved(tiles)) {
+    if (isOver()) {
         ss.over = 'won';
     }
 
@@ -126,3 +129,5 @@ export const starRating = () => {
 
     return 1;
 };
+
+export const isOver = () => isSolved(ss.pzl.tiles);

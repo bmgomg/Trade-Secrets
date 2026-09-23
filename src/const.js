@@ -1,4 +1,4 @@
-export const APP_STATE = '••• V1';
+export const APP_STATE = 'BMG • Trade Secrets V1';
 export const DX = 450;
 export const DY = 800;
 export const PROMPT_PLAY_MORE = 'Paint more?';
