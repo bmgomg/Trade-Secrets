@@ -9,7 +9,7 @@
 		PROMPT_SHOW_FLOOR,
 		PROMPT_SURRENDER
 	} from './const';
-	import { doSurrender, isOver, newStats, onPlay, onReplay, setPrompt, ss } from './shared.svelte';
+	import { doSurrender, isOver, newStats, onAutoPlay, onPlay, onReplay, setPrompt, ss } from './shared.svelte';
 	import { sfx, whoosh } from './sound.svelte';
 	import TextButton from './Text Button.svelte';
 	import { post } from './utils';
@@ -55,12 +55,12 @@
 		post(doSurrender, 150);
 	};
 
-	const onShowBest = () => {
+	const onShowFloor = () => {
 		dismiss();
 		ss.flip = true;
 
 		post(() => {
-			// onAutoPlay();
+			onAutoPlay();
 			delete ss.flip;
 		}, 500);
 	};
@@ -81,7 +81,7 @@
 			{@const s = 'font-size: 18px; padding: 8px 20px 10px; font-weight: 500;'}
 			<div class="grid panel flowcol">
 				<TextButton text={[PROMPT_REPLAY]} onClick={onRepeatPlay} style={style + s} />
-				<TextButton text={[PROMPT_SHOW_FLOOR]} onClick={onShowBest} style={style + s} />
+				<TextButton text={[PROMPT_SHOW_FLOOR]} onClick={onShowFloor} style={style + s} />
 				<TextButton text={[PROMPT_PLAY_NEW]} onClick={onPlayNew} style={style + s} />
 			</div>
 		{:else if ss.prompt === PROMPT_SURRENDER}

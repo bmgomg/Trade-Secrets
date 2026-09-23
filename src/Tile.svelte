@@ -10,7 +10,7 @@
 	const background = $derived(reveal ? bg(tile.color) : 'var(--water)');
 	const color = $derived(reveal ? 'var(--dark)' : inWord ? 'var(--blue)' : 'var(--ink)');
 	const trading = $derived(ss.trade?.length === 2);
-	const nope = $derived(reveal || trading);
+	const nope = $derived(reveal || trading || ss.auto);
 
 	const onTap = () => {
 		if (ss.trade?.length >= 2) {

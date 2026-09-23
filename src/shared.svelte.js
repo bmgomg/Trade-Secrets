@@ -62,6 +62,41 @@ export const loadGame = () => {
     return false;
 };
 
+export const onAutoPlay = () => {
+    ss.auto = true;
+    ss.pzl = cloneDeep(ss.repzl);
+
+    swhoosh();
+
+    const tileAt = cell => ss.pzl.tiles.find(t => t.cell === cell).id;
+
+    const autoSwap = (i = 0) => {
+        if (!ss.auto) {
+            return;
+        }
+
+        const [c1, c2] = ss.pzl.solution[i];
+
+        sfx('click');
+        ss.from = tileAt(c1);
+
+        post(() => {
+            sfx('click');
+            ss.to = tileAt(c2);
+
+            post(doTrade, 800);
+
+            if (isOver()) {
+                delete ss.auto;
+            } else {
+                post(() => autoSwap(i + 1), 2500);
+            }
+        }, 800);
+    };
+
+    post(autoSwap, 2000);
+};
+
 export const onReplay = () => {
     delete ss.over;
 

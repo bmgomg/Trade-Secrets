@@ -13,7 +13,7 @@
 	import ToolButton from './Tool Button.svelte';
 	import { post } from './utils';
 
-	const noSurrender = $derived(ss.over || ss.startPrompt || ss.prompt == PROMPT_SURRENDER);
+	const noSurrender = $derived(ss.auto || ss.flip || ss.over || ss.startPrompt || ss.prompt == PROMPT_SURRENDER);
 	const noResetStats = $derived(ss.stats.plays === 0 || ss.prompt === PROMPT_RESET_STATS);
 
 	const onHome = () => {
