@@ -25,6 +25,7 @@
 <style>
 	.scoreboard {
 		gap: 20px;
+		color: var(--ice);
 	}
 
 	.counter {

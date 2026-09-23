@@ -57,6 +57,6 @@ export const sfx = (chime, rate) => _sound.play(chime, { rate: rate ?? 1 });
 
 export const tap = () => sfx('tap');
 
-export const whoosh = () => sfx('link1', 0.8);
+export const whoosh = () => sfx('score1', 0.8);
 
-export const swhoosh = () => sfx('link2', 0.8);
+export const swhoosh = () => sfx('score2', 0.8);

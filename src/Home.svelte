@@ -81,6 +81,7 @@
 		text-transform: uppercase;
 		margin-bottom: 45px;
 		opacity: 0.6;
+		color: var(--ice);
 	}
 
 	.bullets {
@@ -108,5 +109,6 @@
 	.text {
 		line-height: 1.2em;
 		letter-spacing: 0.04em;
+		color: var(--ice);
 	}
 </style>

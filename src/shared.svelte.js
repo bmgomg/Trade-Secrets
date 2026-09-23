@@ -1,6 +1,7 @@
 import { generate, isSolved } from '$lib/puzzle';
+import { cloneDeep } from 'lodash-es';
 import { APP_STATE, BRACKETS, COLORS, FLIP_MS, PROMPT_PLAY_AGAIN } from './const';
-import { _sound, sfx } from './sound.svelte';
+import { _sound, sfx, swhoosh } from './sound.svelte';
 import { post } from './utils';
 
 export const newStats = () => ({ plays: 0, wins: 0, total: 0 });
@@ -34,6 +35,10 @@ export const loadCommon = () => {
 };
 
 export const persist = () => {
+    if (ss.auto || ss.replay) {
+        return;
+    }
+
     const json = JSON.stringify({ stats: ss.stats, over: ss.over, pzl: ss.pzl });
     localStorage.setItem(appKey, json);
 };
@@ -57,6 +62,15 @@ export const loadGame = () => {
     return false;
 };
 
+export const onReplay = () => {
+    delete ss.over;
+
+    ss.replay = true;
+    ss.pzl = cloneDeep(ss.repzl);
+
+    swhoosh();
+};
+
 export const onPlay = () => {
     if (!loadGame() || isOver()) {
         const pzl = generate({ size: ss.size/* , seed: '2026-09-17' */ });
@@ -65,6 +79,8 @@ export const onPlay = () => {
         sfx('dice');
         persist();
     }
+
+    ss.repzl = cloneDeep(ss.pzl);
 
     if (!_sound.musicPlayed) {
         _sound.playMusic();
@@ -171,6 +187,8 @@ export const doSurrender = () => {
     for (const tile of ss.pzl.tiles) {
         tile.cell = tile.id;
     }
+
+    ss.pzl.tiles.sort((t1,t2) => t1.cell - t2.cell);
 
     persist();
     onOver(false);

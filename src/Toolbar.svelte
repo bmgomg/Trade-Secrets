@@ -8,9 +8,10 @@
 	import Stats from '$lib/images/Stats.webp';
 	import Surrender from '$lib/images/Surrender.webp';
 	import { PROMPT_RESET_STATS, PROMPT_SURRENDER } from './const';
-	import { persistCommon, ss } from './shared.svelte';
+	import { doSurrender, persistCommon, setPrompt, ss } from './shared.svelte';
 	import { _sound } from './sound.svelte';
 	import ToolButton from './Tool Button.svelte';
+	import { post } from './utils';
 
 	const noSurrender = $derived(ss.over || ss.startPrompt || ss.prompt == PROMPT_SURRENDER);
 	const noResetStats = $derived(ss.stats.plays === 0 || ss.prompt === PROMPT_RESET_STATS);
@@ -18,16 +19,22 @@
 	const onHome = () => {
 		delete ss.prompt;
 		delete ss.over;
+		delete ss.auto;
+		delete ss.replay;
 
 		ss.home = true;
 	};
 
 	const onSurrender = () => {
-		// showPrompt(PROMPT_SURRENDER);
+		if (ss.replay) {
+			post(doSurrender, 150);
+		} else {
+			setPrompt(PROMPT_SURRENDER);
+		}
 	};
 
 	const onResetStats = () => {
-		// showPrompt(PROMPT_RESET_STATS);
+		setPrompt(PROMPT_RESET_STATS);
 	};
 
 	const onDictionary = () => {

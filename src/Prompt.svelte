@@ -9,7 +9,7 @@
 		PROMPT_SHOW_FLOOR,
 		PROMPT_SURRENDER
 	} from './const';
-	import { doSurrender, isOver, newStats, onPlay, setPrompt, ss } from './shared.svelte';
+	import { doSurrender, isOver, newStats, onPlay, onReplay, setPrompt, ss } from './shared.svelte';
 	import { sfx, whoosh } from './sound.svelte';
 	import TextButton from './Text Button.svelte';
 	import { post } from './utils';
@@ -34,7 +34,7 @@
 		ss.flip = true;
 
 		post(() => {
-			// onReplay();
+			onReplay();
 			delete ss.flip;
 		}, 500);
 	};
@@ -52,8 +52,6 @@
 
 	const onSurrender = () => {
 		dismiss();
-		delete ss.from;
-
 		post(doSurrender, 150);
 	};
 

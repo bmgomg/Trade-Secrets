@@ -24,7 +24,6 @@
 			--violet: #8e7ce6;
 			--blue: #5a9fec;
 			background: var(--bg);
-			color: var(--ice);
 		}
 
 		.button-base {

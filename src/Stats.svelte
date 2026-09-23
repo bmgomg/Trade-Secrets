@@ -41,6 +41,7 @@
 		font-size: 16px;
 		letter-spacing: 0.25em;
 		text-transform: uppercase;
+		color: var(--ice);
 	}
 
 	.value {
