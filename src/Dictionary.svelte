@@ -76,7 +76,7 @@
 	.selector-item {
 		display: grid;
 		place-content: center;
-		background: var(--ink);
+		background: var(--ice);
 		color: var(--bg);
 		opacity: 0.7;
 		font-weight: bold;
@@ -105,7 +105,7 @@
 		overscroll-behavior: contain;
 		touch-action: pan-y;
 		scrollbar-width: thin;
-		scrollbar-color: var(--ink) transparent;
+		scrollbar-color: var(--ice) transparent;
 		display: grid;
 		align-content: start;
 		gap: 5px;
@@ -130,7 +130,7 @@
 		grid-area: 1/1;
 		display: grid;
 		place-content: center;
-		background: var(--ink);
+		background: var(--ice);
 		color: var(--bg);
 		opacity: 0.7;
 		font-weight: bold;
@@ -142,7 +142,7 @@
 
 	.section-content {
 		grid-area: 1/2;
-		color: var(--ink);
+		color: var(--ice);
 		font-family: RM;
 	}
 </style>

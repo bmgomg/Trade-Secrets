@@ -14,17 +14,17 @@
 			font-family: Oswald;
 
 			--bg: #123456;
-			--ink: #b6cfe4;
+			--ice: #b6cfe4;
 			--water: #2c3a49;
 			--dark: #0a1a18;
-			--ice: #e6f1fb;
+			--ink: #e6f1fb;
 			--teal: #2fb3a8;
 			--gold: #f2b134;
 			--pink: #e0457b;
 			--violet: #8e7ce6;
 			--blue: #5a9fec;
 			background: var(--bg);
-			color: var(--ink);
+			color: var(--ice);
 		}
 
 		.button-base {

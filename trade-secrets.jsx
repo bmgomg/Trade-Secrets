@@ -326,12 +326,12 @@ const css = `
 
 .ts-root{
   --paper:#E4E7EC;
-  --ink:#191C22;
+  --ice:#191C22;
   --slate:#2E3440;
   --mute:#6A7180;
   font-family:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
   background:var(--paper);
-  color:var(--ink);
+  color:var(--ice);
   min-height:100%;
   padding:40px 20px 48px;
   display:flex;
@@ -344,7 +344,7 @@ const css = `
   font-size:15px;font-weight:700;letter-spacing:.14em;
   margin:0 0 12px;text-transform:uppercase;
 }
-.ts-tag{margin:0 0 10px;font-size:15px;font-weight:500;color:var(--ink)}
+.ts-tag{margin:0 0 10px;font-size:15px;font-weight:500;color:var(--ice)}
 .ts-head p{margin:0;font-size:14px;line-height:1.55;color:var(--mute)}
 
 .ts-grid{
@@ -367,7 +367,7 @@ const css = `
   transition:background .22s ease,color .22s ease,transform .18s ease,box-shadow .15s ease;
 }
 .ts-tile:hover:not(:disabled){transform:translateY(-2px)}
-.ts-tile:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.ts-tile:focus-visible{outline:3px solid var(--ice);outline-offset:3px}
 .ts-tile.sel{box-shadow:inset 0 0 0 4px rgba(25,28,34,.85)}
 .ts-tile.lit{color:#1A1D23}
 .ts-tile.flash{transform:scale(.88)}
@@ -384,7 +384,7 @@ const css = `
 .ts-btn{
   font-family:inherit;font-size:14px;font-weight:500;
   padding:9px 16px;border-radius:3px;cursor:pointer;
-  background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+  background:var(--ice);color:var(--paper);border:1px solid var(--ice);
 }
 .ts-btn.ghost{background:transparent;color:var(--mute);border-color:#C3C8D1}
 

@@ -47,6 +47,6 @@
 		font-family: Archivo;
 		font-size: 19px;
 		font-weight: 800;
-		color: var(--ice);
+		color: var(--ink);
 	}
 </style>

@@ -35,7 +35,6 @@
 		font-family: Archivo;
 		font-size: 40px;
         font-weight: 800;
-        /* color: var(--ice); */
 	}
 
 	.label {

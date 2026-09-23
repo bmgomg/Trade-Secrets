@@ -6,7 +6,7 @@
 		PROMPT_PLAY_NEW,
 		PROMPT_REPLAY,
 		PROMPT_RESET_STATS,
-		PROMPT_SHOW_BEST,
+		PROMPT_SHOW_FLOOR,
 		PROMPT_SURRENDER
 	} from './const';
 	import { doSurrender, isOver, newStats, onPlay, setPrompt, ss } from './shared.svelte';
@@ -74,16 +74,16 @@
 		ss.stats = newStats();
 	};
 
-	const style = 'letter-spacing: 0.03em; background: var(--teal); color: var(--dark); border-radius: 999px; ';
+	const style = 'letter-spacing: 0.03em; background: var(--ice); color: var(--dark); border-radius: 999px; ';
 </script>
 
 {#if ss.prompt}
 	<div class="prompt grid psc flowcol" in:fade={{ duration: 200 }} out:fade={{ duration: 100 }}>
 		{#if ss.prompt === PROMPT_PLAY_AGAIN}
 			{@const s = 'font-size: 18px; padding: 8px 20px 10px; font-weight: 500;'}
-			<div class="grid panel flowcol" style="gap: 10px;">
+			<div class="grid panel flowcol">
 				<TextButton text={[PROMPT_REPLAY]} onClick={onRepeatPlay} style={style + s} />
-				<TextButton text={[PROMPT_SHOW_BEST]} onClick={onShowBest} style={style + s} />
+				<TextButton text={[PROMPT_SHOW_FLOOR]} onClick={onShowBest} style={style + s} />
 				<TextButton text={[PROMPT_PLAY_NEW]} onClick={onPlayNew} style={style + s} />
 			</div>
 		{:else if ss.prompt === PROMPT_SURRENDER}

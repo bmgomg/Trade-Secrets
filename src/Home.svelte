@@ -22,7 +22,7 @@
 	const LINE = `Sixteen letters hide four words, one ${hi}secret color</span> each.`;
 
 	const style =
-		'font-size: 24px; width: 100%; padding: 10px 0; background: var(--teal); color: var(--dark); letter-spacing: 3px; font-weight: 600; border-radius: 999px;';
+		'font-size: 24px; width: 100%; padding: 10px 0; background: var(--ice); color: var(--dark); letter-spacing: 3px; font-weight: 600; border-radius: 999px;';
 </script>
 
 {#if ss.home}
@@ -70,7 +70,7 @@
 		font-size: 48px;
 		font-weight: 600;
 		letter-spacing: 0.05em;
-		color: var(--ice);
+		color: var(--ink);
 	}
 
 	.tagline {
