@@ -9,7 +9,7 @@
 		PROMPT_SHOW_FLOOR,
 		PROMPT_SURRENDER
 	} from './const';
-	import { doSurrender, isOver, newStats, onAutoPlay, onPlay, onReplay, setPrompt, ss } from './shared.svelte';
+	import { doSurrender, isOver, newStats, onAutoPlay, onPlay, onReplay, persist, setPrompt, ss } from './shared.svelte';
 	import { sfx, whoosh } from './sound.svelte';
 	import TextButton from './Text Button.svelte';
 	import { post } from './utils';
@@ -67,9 +67,10 @@
 
 	const onResetStats = () => {
 		whoosh();
-
 		dismiss();
+
 		ss.stats = newStats();
+		persist();
 	};
 
 	const style = 'font-size: 20px; padding: 8px 25px 10px; letter-spacing: 0.03em; background: var(--ice); color: var(--dark); border-radius: 999px; ';
