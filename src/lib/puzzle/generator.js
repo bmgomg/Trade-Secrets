@@ -1,6 +1,6 @@
 import { lexiconFor } from './dict.js';
 import { createRng } from './rng.js';
-import { isSolved, spanningLetters, tileFloors } from './rules.js';
+import { isSolved, planSwaps, spanningLetters, tileFloors } from './rules.js';
 
 // Par allows two extra swaps: one same-color block, routed through a third tile.
 export const PAR_OFFSET = 2;
@@ -18,6 +18,10 @@ const solvedTiles = (wordsByColor) => {
 };
 
 const inRange = (v, min, max) => v >= min && v <= max;
+
+// A shortest solution: `floor` swaps, each a pair of tile ids to tap. Ids are stable across swaps,
+// so a swap says which two tiles to trade without caring where they've drifted to.
+const solutionFor = (tiles, plan) => planSwaps(plan).map(([a, b]) => [tiles[a].id, tiles[b].id]);
 
 /**
  * Deals a puzzle.
@@ -77,7 +81,17 @@ export const generate = ({
 			const p = parFor(f.relaxed);
 
 			if (f.floor < Infinity && inRange(f.floor, ...floor) && inRange(f.relaxed, ...relaxed) && inRange(p, ...par)) {
-				return { size, words, wordsByColor, tiles, floor: f.floor, relaxedFloor: f.relaxed, par: p, spanning };
+				return {
+					size,
+					words,
+					wordsByColor,
+					tiles,
+					floor: f.floor,
+					relaxedFloor: f.relaxed,
+					par: p,
+					spanning,
+					solution: solutionFor(tiles, f.plan)
+				};
 			}
 		}
 	}
@@ -113,7 +127,8 @@ export const decodePuzzle = (code) => {
 		floor: f.floor,
 		relaxedFloor: f.relaxed,
 		par: parFor(f.relaxed),
-		spanning: spanningLetters(words)
+		spanning: spanningLetters(words),
+		solution: solutionFor(tiles, f.plan)
 	};
 };
 

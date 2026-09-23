@@ -79,6 +79,7 @@ export const spanningLetters = (words) => {
  *   another color first), less 2 for each pair of such cycles of different colors that
  *   can be merged with each other.
  * - relaxed: n² − cycles, as if any two tiles could trade (the prototype's "floor").
+ * - plan: the floor-achieving target, for `planSwaps` to turn into an actual swap list.
  */
 export const floors = (letters, colors) => {
 	const cells = letters.length;
@@ -93,7 +94,7 @@ export const floors = (letters, colors) => {
 	const words = groups.map((g) => (g.length === n ? anagrams.get(sortKey(g)) : undefined));
 
 	if (words.some((w) => !w)) {
-		return { floor: Infinity, relaxed: Infinity };
+		return { floor: Infinity, relaxed: Infinity, plan: null };
 	}
 
 	const tl = new Array(cells);
@@ -104,6 +105,7 @@ export const floors = (letters, colors) => {
 	const mono = new Array(n);
 	let floor = Infinity;
 	let relaxed = Infinity;
+	let plan = null;
 
 	const leaf = () => {
 		seen.fill(false);
@@ -133,9 +135,14 @@ export const floors = (letters, colors) => {
 		}
 
 		const pairs = Math.min(m >> 1, m - Math.max(...mono));
+		const cost = cells - cycles + 2 * (m - pairs);
 
 		relaxed = Math.min(relaxed, cells - cycles);
-		floor = Math.min(floor, cells - cycles + 2 * (m - pairs));
+
+		if (cost < floor) {
+			floor = cost;
+			plan = { f: f.slice(), tc: tc.slice() };
+		}
 	};
 
 	// assign each position to a target slot holding the same letter and color
@@ -171,7 +178,7 @@ export const floors = (letters, colors) => {
 		}
 	}
 
-	return { floor, relaxed };
+	return { floor, relaxed, plan };
 };
 
 export const tileFloors = (tiles) =>
@@ -179,6 +186,117 @@ export const tileFloors = (tiles) =>
 		tiles.map((t) => t.letter),
 		tiles.map((t) => t.color)
 	);
+
+/**
+ * Turns a `floors` plan into an actual shortest solution: a list of legal swaps, each a pair of
+ * *starting* positions (indices into the tile array the plan was computed from).
+ *
+ * The plan's `f` maps each position to the target slot its tile belongs in; its cycles are what
+ * the floor counts. A cycle of length L resolves in L−1 swaps, each sending one tile home, as
+ * long as the two tiles involved differ in color. A monochrome cycle can't start, so it is first
+ * merged (one swap) with a cycle of another color — with a second monochrome cycle when one is
+ * available, since that pays the +2 for both at once, otherwise with any differently-colored
+ * tile, a tile already at home included.
+ */
+export const planSwaps = ({ f, tc }) => {
+	const cells = f.length;
+	const dest = f.slice(); // dest[p] = target slot of the tile now at p
+	const at = f.map((_, p) => p); // at[p] = starting position of the tile now at p
+	const colorAt = (p) => tc[dest[p]];
+	const swaps = [];
+
+	const swap = (a, b) => {
+		swaps.push([at[a], at[b]]);
+		[dest[a], dest[b]] = [dest[b], dest[a]];
+		[at[a], at[b]] = [at[b], at[a]];
+	};
+
+	const cycles = () => {
+		const seen = new Array(cells).fill(false);
+		const out = [];
+
+		for (let i = 0; i < cells; i++) {
+			if (seen[i] || dest[i] === i) {
+				continue;
+			}
+
+			const cycle = [];
+
+			for (let j = i; !seen[j]; j = dest[j]) {
+				seen[j] = true;
+				cycle.push(j);
+			}
+
+			out.push(cycle);
+		}
+
+		return out;
+	};
+
+	const isMono = (cycle) => cycle.every((p) => colorAt(p) === colorAt(cycle[0]));
+
+	// merge every monochrome cycle away, pairing two of them whenever their colors differ
+	for (;;) {
+		const monos = cycles().filter(isMono);
+
+		if (!monos.length) {
+			break;
+		}
+
+		const byColor = new Map();
+
+		for (const cycle of monos) {
+			const color = colorAt(cycle[0]);
+			byColor.set(color, [...(byColor.get(color) ?? []), cycle]);
+		}
+
+		// pairing off the two largest color groups first maximizes the number of pairs
+		const groups = [...byColor.values()].sort((a, b) => b.length - a.length);
+
+		if (groups.length > 1) {
+			swap(groups[0][0][0], groups[1][0][0]);
+			continue;
+		}
+
+		const cycle = groups[0][0];
+		const inCycle = new Set(cycle);
+		const color = colorAt(cycle[0]);
+		const outside = [...Array(cells).keys()].filter((p) => !inCycle.has(p) && colorAt(p) !== color);
+
+		// a tile already at home is the cheapest router: it only rejoins the cycle, nothing else
+		swap(cycle[0], outside.find((p) => dest[p] === p) ?? outside[0]);
+	}
+
+	for (let rest of cycles()) {
+		while (rest.length > 1) {
+			const colors = rest.map(colorAt);
+
+			// send one tile home, but not if that would leave a monochrome cycle behind
+			const legal = (i) => colorAt(rest[i]) !== colorAt(dest[rest[i]]);
+			const safe = (i) => {
+				const left = colors.filter((_, k) => k !== i);
+				return left.length <= 1 || left.some((c) => c !== left[0]);
+			};
+
+			const keys = [...rest.keys()];
+			const i = keys.find((k) => legal(k) && safe(k)) ?? keys.find(legal);
+			const p = rest[i];
+			const home = dest[p];
+
+			swap(p, home);
+			rest = rest.filter((q) => q !== home);
+		}
+	}
+
+	return swaps;
+};
+
+/** `{ floor, relaxed, swaps }` — swaps as pairs of tile ids, in order. */
+export const tileSolution = (tiles) => {
+	const { floor, relaxed, plan } = tileFloors(tiles);
+
+	return { floor, relaxed, swaps: plan ? planSwaps(plan).map(([a, b]) => [tiles[a].id, tiles[b].id]) : null };
+};
 
 /**
  * Exact fewest legal swaps by iterative-deepening A*, with the relaxed floor as the heuristic

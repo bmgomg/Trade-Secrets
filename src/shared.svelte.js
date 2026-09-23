@@ -1,4 +1,4 @@
-import { generate, isSolved } from '$lib/puzzle';
+import { generate, isSolved, tileSolution } from '$lib/puzzle';
 import { cloneDeep } from 'lodash-es';
 import { APP_STATE, BRACKETS, COLORS, FLIP_MS, PROMPT_PLAY_AGAIN } from './const';
 import { _sound, sfx, swhoosh } from './sound.svelte';
@@ -68,28 +68,29 @@ export const onAutoPlay = () => {
 
     swhoosh();
 
-    const tileAt = cell => ss.pzl.tiles.find(t => t.cell === cell).id;
+    const tileWithId = id => ss.pzl.tiles.find(t => t.id === id);
 
     const autoSwap = (i = 0) => {
         if (!ss.auto) {
             return;
         }
 
-        const [c1, c2] = ss.pzl.solution[i];
+        // a swap is a pair of tile ids; ids are stable, so the tiles may sit anywhere by now
+        const [id1, id2] = ss.pzl.solution[i];
 
         sfx('click');
-        ss.from = tileAt(c1);
+        ss.trade = [tileWithId(id1)];
 
         post(() => {
             sfx('click');
-            ss.to = tileAt(c2);
+            ss.trade.push(tileWithId(id2));
 
             post(doTrade, 800);
 
-            if (isOver()) {
-                delete ss.auto;
-            } else {
+            if (i + 1 < ss.pzl.solution.length) {
                 post(() => autoSwap(i + 1), 2500);
+            } else {
+                delete ss.auto;
             }
         }, 800);
     };
@@ -109,7 +110,7 @@ export const onReplay = () => {
 export const onPlay = () => {
     if (!loadGame() || isOver()) {
         const pzl = generate({ size: ss.size/* , seed: '2026-09-17' */ });
-        ss.pzl = { tiles: pzl.tiles, floor: pzl.floor, trades: 0 };
+        ss.pzl = { tiles: pzl.tiles, floor: pzl.floor, solution: pzl.solution, trades: 0 };
 
         sfx('dice');
         persist();
@@ -167,7 +168,7 @@ export const rowCol = (i, size = ss.size) => {
 };
 
 export const starRating = () => {
-    if (ss.pzl.trades === 0 || !ss.pzl.floor || !ss.over) {
+    if (ss.pzl.trades === 0 || !ss.pzl.floor || ss.over !== 'won') {
         return 0;
     }
 
@@ -221,11 +222,15 @@ export const onOver = (won) => {
 export const doSurrender = () => {
     onOver(false);
 
-    for (const tile of ss.pzl.tiles) {
-        tile.cell = tile.id;
+    // reveal the winning arrangement closest to where the player left the board, rather than
+    // snapping back to the original deal, so whatever they did get right stays put
+    const { tiles } = ss.pzl;
+    const { swaps } = tileSolution(tiles);
+
+    for (const [id1, id2] of swaps) {
+        const i = tiles.findIndex(t => t.id === id1);
+        const j = tiles.findIndex(t => t.id === id2);
+
+        [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
     }
-
-    ss.pzl.tiles.sort((t1,t2) => t1.cell - t2.cell);
-
-    // persist();
 };

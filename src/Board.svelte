@@ -16,7 +16,7 @@
 		{#each ss.pzl.tiles as tile, i (tile.id)}
 			{@const { row } = rowCol(i, ss.size)}
 			{@const inWord = valids[row - 1]}
-			<div animate:flip={{ duration: ss.over ? 1000 : FLIP_MS, easing: linear }}>
+			<div animate:flip={{ duration: ss.over ? 900 : FLIP_MS, easing: linear }}>
 				<Tile {tile} {inWord} />
 			</div>
 		{/each}

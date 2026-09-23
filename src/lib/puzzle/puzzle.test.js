@@ -83,3 +83,31 @@ test('oracle solver scores exactly the legal floor; player models always finish'
 		}
 	}
 });
+
+test('the returned solution is a legal, shortest, winning swap sequence', () => {
+	for (const size of [3, 4]) {
+		const rng = createRng(11);
+
+		for (let i = 0; i < 100; i++) {
+			const p = generate({ size, rng });
+			const code = encodePuzzle(p);
+			let tiles = p.tiles;
+
+			assert.equal(p.solution.length, p.floor, code);
+
+			for (const [a, b] of p.solution) {
+				const next = tapPair(
+					tiles,
+					tiles.findIndex((t) => t.id === a),
+					tiles.findIndex((t) => t.id === b)
+				);
+
+				assert.notEqual(next, tiles, code); // a same-color pair would have been refused
+				tiles = next;
+			}
+
+			assert.ok(isSolved(tiles), code);
+			assert.deepEqual(decodePuzzle(code).solution, p.solution);
+		}
+	}
+});
