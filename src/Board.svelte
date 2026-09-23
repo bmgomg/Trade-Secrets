@@ -8,7 +8,7 @@
 
 	const valids = $derived(ss.pzl.tiles ? wordRows(ss.pzl.tiles) : []);
 	const repeat = $derived(`repeat(${ss.size}, auto)`);
-	const style = $derived(`grid: ${repeat} / ${repeat}; gap: ${GAP}px; --pulse-delay: ${ss.over === 'lost' ? 1.2 : 0.7}s;`);
+	const style = $derived(`grid: ${repeat} / ${repeat}; gap: ${GAP}px; --pulse-delay: ${ss.over === 'lost' ? 1.2 : 1}s;`);
 </script>
 
 <div class="board psc" class:flip={ss.flip} class:pulse={ss.over} {style}>
@@ -16,7 +16,7 @@
 		{#each ss.pzl.tiles as tile, i (tile.id)}
 			{@const { row } = rowCol(i, ss.size)}
 			{@const inWord = valids[row - 1]}
-			<div animate:flip={{ duration: ss.over ? 900 : FLIP_MS, easing: linear }}>
+			<div animate:flip={{ duration: ss.over === 'lost' ? 900 : FLIP_MS, easing: linear }}>
 				<Tile {tile} {inWord} />
 			</div>
 		{/each}
