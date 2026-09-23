@@ -8,6 +8,15 @@
     "sideBar.background": "#203040",
     "terminal.background": "#203040"
   },
+  " workbench.colorCustomizations": /*light*/ {
+    "titleBar.activeBackground": "#fdebca",
+    "titleBar.inactiveBackground": "#fdebca",
+    "tab.inactiveBackground": "#decba9",
+    "tab.inactiveForeground": "#000000",
+    "tab.activeBackground": "#abdecf",
+    "sideBar.background": "#eeeeee",
+    "terminal.background": "#eeeeee"
+  },
   "window.title": "${dirty}${rootName} • ${activeEditorShort}",
   "terminal.integrated.cursorBlinking": true,
   "editor.guides.bracketPairs": true,
