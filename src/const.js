@@ -1,10 +1,10 @@
 export const APP_STATE = 'BMG • Trade Secrets V1';
 export const DX = 450;
 export const DY = 800;
-export const PROMPT_REPLAY = 'Replay?';
-export const PROMPT_PLAY_AGAIN = 'Play again?';
-export const PROMPT_PLAY_NEW = 'Play new?';
-export const PROMPT_SHOW_FLOOR = 'Show floor?';
+export const PROMPT_REPLAY = 'Replay';
+export const PROMPT_PLAY_AGAIN = 'Play again';
+export const PROMPT_PLAY_NEW = 'Play new';
+export const PROMPT_SHOW_FLOOR = 'Show floor';
 export const PROMPT_SURRENDER = 'Avg. will be affected – give up?';
 export const PROMPT_RESET_STATS = 'Reset stats — are you sure?';
 export const PROMPT_NO = 'No';

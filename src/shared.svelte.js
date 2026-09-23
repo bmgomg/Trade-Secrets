@@ -63,6 +63,8 @@ export const loadGame = () => {
 };
 
 export const onAutoPlay = () => {
+    delete ss.over;
+
     ss.auto = true;
     ss.pzl = cloneDeep(ss.repzl);
 

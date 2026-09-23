@@ -72,29 +72,27 @@
 		ss.stats = newStats();
 	};
 
-	const style = 'letter-spacing: 0.03em; background: var(--ice); color: var(--dark); border-radius: 999px; ';
+	const style = 'font-size: 20px; padding: 8px 25px 10px; letter-spacing: 0.03em; background: var(--ice); color: var(--dark); border-radius: 999px; ';
 </script>
 
 {#if ss.prompt}
 	<div class="prompt grid psc flowcol" in:fade={{ duration: 200 }} out:fade={{ duration: 100 }}>
 		{#if ss.prompt === PROMPT_PLAY_AGAIN}
-			{@const s = 'font-size: 18px; padding: 8px 20px 10px; font-weight: 500;'}
+			{@const s = 'font-weight: 500;'}
 			<div class="grid panel flowcol">
 				<TextButton text={[PROMPT_REPLAY]} onClick={onRepeatPlay} style={style + s} />
 				<TextButton text={[PROMPT_SHOW_FLOOR]} onClick={onShowFloor} style={style + s} />
 				<TextButton text={[PROMPT_PLAY_NEW]} onClick={onPlayNew} style={style + s} />
 			</div>
 		{:else if ss.prompt === PROMPT_SURRENDER}
-			{@const s = 'font-size: 20px; padding: 8px 25px 10px;'}
 			<div class="grid panel flowcol">
-				<TextButton text={[PROMPT_SURRENDER]} onClick={onSurrender} style={style + s} />
-				<TextButton text={[PROMPT_NO]} onClick={dismiss} style={style + s} />
+				<TextButton text={[PROMPT_SURRENDER]} onClick={onSurrender} style={style} />
+				<TextButton text={[PROMPT_NO]} onClick={dismiss} style={style} />
 			</div>
 		{:else if ss.prompt === PROMPT_RESET_STATS}
-			{@const s = 'font-size: 20px; padding: 8px 25px 10px;'}
 			<div class="grid panel flowcol">
-				<TextButton text={[PROMPT_RESET_STATS]} onClick={onResetStats} style={style + s} />
-				<TextButton text={[PROMPT_NO]} onClick={dismiss} style={style + s} />
+				<TextButton text={[PROMPT_RESET_STATS]} onClick={onResetStats} style={style} />
+				<TextButton text={[PROMPT_NO]} onClick={dismiss} style={style} />
 			</div>
 		{/if}
 	</div>
