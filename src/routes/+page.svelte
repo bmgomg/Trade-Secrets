@@ -10,6 +10,7 @@
 	import { clientRect, post, underMouse } from '../utils';
 
 	let scale = $state(1);
+	let border = $state();
 
 	$effect(() => {
 		const disable = (e) => {
@@ -31,6 +32,7 @@
 			}
 
 			scale = Math.min(scx, scy);
+			border = r.width - DX * scale > 50 && r.height - DY * scale > 50;
 		};
 
 		const toggleMusic = () => {
@@ -84,7 +86,7 @@
 		<Splash />
 	{:else}
 		<div class="vignette"></div>
-		<div id="app-content" style="scale: {scale};">
+		<div id="app-content" class:border style="scale: {scale};">
 			<Frame />
 			<GamePage />
 			<Home />
@@ -120,6 +122,9 @@
 		z-index: 1;
 		background: var(--bg);
 		box-sizing: border-box;
-		border: 1px dotted gray;
+	}
+
+	.border {
+		border: 1px dotted var(--ink);
 	}
 </style>
