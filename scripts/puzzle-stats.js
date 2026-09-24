@@ -94,10 +94,6 @@ histogram(
 	puzzles.map((p) => p.floor - p.relaxedFloor)
 );
 histogram(
-	'par (relaxed + 2)',
-	puzzles.map((p) => p.par)
-);
-histogram(
 	'spanning letters',
 	puzzles.map((p) => p.spanningCount)
 );
@@ -140,10 +136,6 @@ for (const v of variants) {
 	histogram(
 		'swaps − legal floor',
 		done.map((r) => r.swaps - r.floor)
-	);
-	histogram(
-		'swaps − par',
-		done.map((r) => r.swaps - r.par)
 	);
 	byKey('swaps − relaxed floor, by relaxed floor', done, 'relaxedFloor', (r) => r.swaps - r.relaxedFloor);
 	byKey('swaps − legal floor, by legal floor', done, 'floor', (r) => r.swaps - r.floor);

@@ -2,11 +2,6 @@ import { lexiconFor } from './dict.js';
 import { createRng } from './rng.js';
 import { isSolved, planSwaps, spanningLetters, tileFloors } from './rules.js';
 
-// Par allows two extra swaps: one same-color block, routed through a third tile.
-export const PAR_OFFSET = 2;
-
-export const parFor = (relaxedFloor) => relaxedFloor + PAR_OFFSET;
-
 // per grid size: cap on letters shared by two different words.
 // Both reject the top tail of deals: 6% for 3×3 (3+), 15% for 4×4 (5+, where the median deal has 3).
 export const MAX_SPANNING = { 3: 2, 4: 4 };
@@ -30,9 +25,8 @@ const solutionFor = (tiles, plan) => planSwaps(plan).map(([a, b]) => [tiles[a].i
  * - size         3 (3×3, three 3-letter words) or 4 (4×4, four 4-letter words), default 3
  * - seed         number or string; same seed + options → same puzzle
  * - rng          an existing createRng() instance (overrides seed)
- * - floor        [min, max] legal floor (perfect-info swaps), default any
- * - relaxed      [min, max] prototype floor (par − 2), default [3, ∞] as in the prototype
- * - par          [min, max] par, default any
+ * - floor        [min, max] legal floor (perfect-info swaps; the game's "trade floor"), default [3, ∞]
+ * - relaxed      [min, max] relaxed floor (as if any two tiles could trade), default any
  * - maxSpanning  cap on letters shared by two different words, default MAX_SPANNING[size]
  * - randomColors shuffle which word gets which color, default true
  *                (otherwise color order = alphabetical word order, which leaks information)
@@ -43,9 +37,8 @@ export const generate = ({
 	size = 3,
 	seed,
 	rng = createRng(seed),
-	floor = [0, Infinity],
-	relaxed = [3, Infinity],
-	par = [0, Infinity],
+	floor = [3, Infinity],
+	relaxed = [0, Infinity],
 	maxSpanning = MAX_SPANNING[size],
 	randomColors = true,
 	maxDeals = 5000,
@@ -78,9 +71,8 @@ export const generate = ({
 			}
 
 			const f = tileFloors(tiles);
-			const p = parFor(f.relaxed);
 
-			if (f.floor < Infinity && inRange(f.floor, ...floor) && inRange(f.relaxed, ...relaxed) && inRange(p, ...par)) {
+			if (f.floor < Infinity && inRange(f.floor, ...floor) && inRange(f.relaxed, ...relaxed)) {
 				return {
 					size,
 					words,
@@ -88,7 +80,6 @@ export const generate = ({
 					tiles,
 					floor: f.floor,
 					relaxedFloor: f.relaxed,
-					par: p,
 					spanning,
 					solution: solutionFor(tiles, f.plan)
 				};
@@ -126,7 +117,6 @@ export const decodePuzzle = (code) => {
 		tiles,
 		floor: f.floor,
 		relaxedFloor: f.relaxed,
-		par: parFor(f.relaxed),
 		spanning: spanningLetters(words),
 		solution: solutionFor(tiles, f.plan)
 	};

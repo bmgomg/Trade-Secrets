@@ -174,7 +174,7 @@ export const starRating = () => {
         return 0;
     }
 
-    const d = ss.pzl.trades - ss.pzl.floor;
+    const d = ss.pzl.trades / ss.pzl.floor;
     const b = BRACKETS[ss.size - 3];
 
     for (let i = 0; i < b.length; i++) {

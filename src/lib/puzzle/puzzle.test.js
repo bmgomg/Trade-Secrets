@@ -15,8 +15,7 @@ test('generated puzzles follow the deal rules and round-trip through codes', () 
 	for (let i = 0; i < 200; i++) {
 		const p = generate({ rng });
 		assert.ok(!isSolved(p.tiles));
-		assert.ok(p.relaxedFloor >= 3 && p.floor >= p.relaxedFloor);
-		assert.equal(p.par, p.relaxedFloor + 2);
+		assert.ok(p.floor >= 3 && p.floor >= p.relaxedFloor);
 		assert.ok(p.spanning.length <= 2);
 		assert.deepEqual(decodePuzzle(encodePuzzle(p)), p);
 	}
@@ -27,7 +26,8 @@ test('difficulty targeting', () => {
 
 	for (let i = 0; i < 20; i++) {
 		assert.equal(generate({ rng, floor: [6, 6] }).floor, 6);
-		assert.equal(generate({ rng, par: [5, 5] }).par, 5);
+		const p = generate({ rng, floor: [4, 5] });
+		assert.ok(p.floor >= 4 && p.floor <= 5);
 	}
 });
 
@@ -35,7 +35,7 @@ test('legal floor matches search', () => {
 	const rng = createRng(3);
 
 	for (let i = 0; i < 60; i++) {
-		const p = generate({ rng, relaxed: [0, Infinity] });
+		const p = generate({ rng });
 		assert.equal(p.floor, searchFloor(p.tiles), encodePuzzle(p));
 	}
 });
@@ -52,7 +52,7 @@ test('4×4: deal rules, codes, legal floor matches search, player model finishes
 	}
 
 	for (let i = 0; i < 4; i++) {
-		const p = generate({ size: 4, rng, relaxed: [0, 5] });
+		const p = generate({ size: 4, rng, floor: [0, 5] });
 		assert.equal(p.floor, searchFloor(p.tiles), encodePuzzle(p));
 	}
 

@@ -1,6 +1,6 @@
 // Precomputes a deterministic puzzle bank as JSON: an array of codes ("BAT-DOG-ELF:402135786").
 // Decode with decodePuzzle() from src/lib/puzzle.
-// Usage: node scripts/puzzle-bank.js --out=static/puzzles.json [--count=1000] [--seed=bank] [--par=6,7]
+// Usage: node scripts/puzzle-bank.js --out=static/puzzles.json [--count=1000] [--seed=bank] [--size=3] [--floor=4,6]
 
 import { writeFileSync } from 'node:fs';
 import { makeBank } from '../src/lib/puzzle/index.js';
@@ -17,9 +17,9 @@ if (!out) {
 
 const options = Object.fromEntries(
 	[
+		['size', +arg('size', 3)],
 		['floor', range(arg('floor'))],
-		['relaxed', range(arg('relaxed'))],
-		['par', range(arg('par'))]
+		['relaxed', range(arg('relaxed'))]
 	].filter(([, v]) => v)
 );
 

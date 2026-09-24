@@ -23,10 +23,11 @@ Full decision history: [docs/design-notes.md](docs/design-notes.md).
 - **Win:** every row is a dictionary word **and** a single color. Row order does not matter, and rows stay where they are on the win (no alphabetical snap).
   - Consequence: an anagram inside one color group is fine (BAT or TAB from the same three same-colored tiles both win). A different split of the nine letters into words (letters from mixed colors) never wins.
 - **Score = swaps.** Same-color taps are free. Lower is better. "Tapped pairs" is displayed but not scored.
-- **Par = floor + 2**, where *floor* is the fewest swaps to any winning arrangement given perfect color knowledge.
-  - +2 = one "same-color block": two letters that need to trade share a color, so a third tile must route the move (1 swap becomes 3).
-  - Derived from a no-color-knowledge solver over 400 boards: its median was exactly floor + 2 at every floor from 3 to 7.
-  - "Par" is plain-English benchmark language only — no birdie/eagle/bogey vocabulary. Win line: "Solved in N swaps. Even par." / "K under par." / "K over par."
+- **The benchmark is the floor itself**, shown as **"trade floor"**: the fewest legal swaps to any winning arrangement
+  given perfect color knowledge. No par offset, no golf vocabulary.
+  - Stars come from `d = trades − floor` via `BRACKETS` in `src/const.js` (one set per grid size).
+  - The old "par = floor + 2" is gone, and par is out of the engine: `generate()` returns `floor` (legal) and
+    `relaxedFloor`, and takes `floor` / `relaxed` ranges (floor defaults to `[3, ∞]`).
 - **Memory is a deliberate part of the design**, not a flaw to be fixed.
 
 ## Dictionary
