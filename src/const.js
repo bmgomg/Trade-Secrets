@@ -13,6 +13,8 @@ export const TILE_SIZES = [100, 90];
 export const GAP = 10;
 export const FLIP_MS = 500;
 export const BRACKETS = [[1.5, 2, 2.5, 3], [1.5, 2, 2.5, 3]];
+export const MSG_REPLAY = 'This is a replay. Your result won\'t count toward your stats.';
+export const MSG_DEMO = 'This is a demo. The result won\'t count toward your stats.';
 
 export const HERO_TILES = [
     [
