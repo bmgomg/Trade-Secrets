@@ -1,12 +1,15 @@
 <script>
 	import { HERO_TILES } from './const';
 	import { persistCommon, ss } from './shared.svelte';
+	import { tap } from './sound.svelte';
 	import { _range, post } from './utils';
 
 	const { size } = $props();
 	const selected = $derived(ss.size === size);
 
 	const onTap = () => {
+		tap();
+		
 		ss.sizeChanged = true;
 
 		post(() => {
