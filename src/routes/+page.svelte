@@ -101,8 +101,8 @@
 		display: grid;
 		place-content: center;
 		box-sizing: border-box;
-		background-image: url('$lib/images/Pattern.webp');
-		background-size: 350px;
+		background-image: url('$lib/images/Tunnel.svg');
+		background-size: 175px;
 		background-position: center;
 	}
 
