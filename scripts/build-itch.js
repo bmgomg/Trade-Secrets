@@ -55,7 +55,14 @@ for (const file of fs.readdirSync(OUT).filter((f) => f.endsWith('.html'))) {
 			script.includes('__sveltekit') ? script : ''
 		)
 		// comments on their own line in the head, which may label tags that are now gone
-		.replace(/<head>[\s\S]*?<\/head>/, (head) => head.replace(/^[ \t]*<!--[\s\S]*?-->[ \t]*\r?\n/gm, ''));
+		.replace(/<head>[\s\S]*?<\/head>/, (head) => head.replace(/^[ \t]*<!--[\s\S]*?-->[ \t]*\r?\n/gm, ''))
+		// itch opens the game as .../index.html; without SSR (ssr = false) SvelteKit's router would look for an
+		// /index.html route and 404, so the file name comes off the URL before the app starts
+		.replace(
+			/<head>\r?\n/,
+			(head) =>
+				`${head}\t\t<script>if (location.pathname.endsWith('/index.html')) history.replaceState(history.state, '', location.href.replace(/index\\.html(?=[?#]|$)/, ''));</script>\n`
+		);
 	fs.writeFileSync(page, html);
 }
 
