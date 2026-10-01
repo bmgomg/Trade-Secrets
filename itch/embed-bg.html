@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+	@font-face { font-family: Archivo; src: url('../src/lib/fonts/Archivo.ttf'); }
+	@font-face { font-family: Oswald; src: url('../src/lib/fonts/Oswald.ttf'); }
+
+	:root {
+		--bg: #123456;
+		--ice: #b6cfe4;
+		--water: #2c3a49;
+		--dark: #0a1a18;
+		--ink: #e6f1fb;
+		--teal: #2fb3a8;
+		--gold: #f2b134;
+		--pink: #e0457b;
+		--violet: #8e7ce6;
+	}
+
+	html, body { margin: 0; padding: 0; }
+
+	.cover {
+		position: relative;
+		width: 640px;
+		height: 360px;
+		overflow: hidden;
+		background: var(--bg) url('../src/lib/images/Tunnel.svg') center / 175px;
+	}
+
+	.vignette {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(transparent 30%, black 160%);
+	}
+
+	.head {
+		position: absolute;
+		top: 26px;
+		left: 0;
+		right: 0;
+		display: grid;
+		justify-items: center;
+	}
+
+	.title {
+		font-family: Oswald;
+		font-weight: 600;
+		font-size: 52px;
+		line-height: 1;
+		letter-spacing: 0.05em;
+		color: var(--ink);
+		text-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+	}
+
+	.tagline {
+		font-family: Oswald;
+		font-weight: 500;
+		font-size: 15px;
+		letter-spacing: 3px;
+		text-transform: uppercase;
+		color: var(--ice);
+		opacity: 0.75;
+		margin-top: 8px;
+	}
+
+	.board {
+		position: absolute;
+		bottom: 34px;
+		display: grid;
+		padding: 10px;
+		border-radius: 14px;
+		background: rgba(10, 26, 24, 0.55);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+	}
+
+	.b3 {
+		left: 44px;
+		grid: repeat(3, 52px) / repeat(3, 52px);
+		gap: 7px;
+	}
+
+	.b4 {
+		right: 44px;
+		grid: repeat(4, 37px) / repeat(4, 37px);
+		gap: 6px;
+	}
+
+	.tile {
+		display: grid;
+		place-content: center;
+		font-family: Archivo;
+		font-weight: 800;
+		background: var(--water);
+		color: var(--ink);
+	}
+
+	.b3 .tile { border-radius: 8px; font-size: 26px; }
+	.b4 .tile { border-radius: 6px; font-size: 19px; }
+
+	.tile.on {
+		color: var(--dark);
+		box-shadow: 0 0 16px var(--glow);
+	}
+
+	.teal { background: var(--teal); --glow: rgba(47, 179, 168, 0.7); }
+	.gold { background: var(--gold); --glow: rgba(242, 177, 52, 0.7); }
+	.pink { background: var(--pink); --glow: rgba(224, 69, 123, 0.7); }
+</style>
+</head>
+<body>
+	<div class="cover">
+		<div class="vignette"></div>
+		<div class="head">
+			<div class="title">TRADE SECRETS</div>
+			<div class="tagline">Every peek risks a move</div>
+		</div>
+		<div class="board b3">
+			<div class="tile">K</div>
+			<div class="tile">P</div>
+			<div class="tile on teal">Y</div>
+			<div class="tile">T</div>
+			<div class="tile">S</div>
+			<div class="tile">E</div>
+			<div class="tile on gold">Y</div>
+			<div class="tile">I</div>
+			<div class="tile">P</div>
+		</div>
+		<div class="board b4">
+			<div class="tile">P</div>
+			<div class="tile">W</div>
+			<div class="tile">Y</div>
+			<div class="tile">C</div>
+			<div class="tile">O</div>
+			<div class="tile">A</div>
+			<div class="tile">T</div>
+			<div class="tile">N</div>
+			<div class="tile">H</div>
+			<div class="tile">U</div>
+			<div class="tile on pink">L</div>
+			<div class="tile">D</div>
+			<div class="tile">I</div>
+			<div class="tile on gold">L</div>
+			<div class="tile">E</div>
+			<div class="tile">R</div>
+		</div>
+	</div>
+</body>
+</html>

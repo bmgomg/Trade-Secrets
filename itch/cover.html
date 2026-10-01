@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+	@font-face { font-family: Archivo; src: url('../src/lib/fonts/Archivo.ttf'); }
+	@font-face { font-family: Oswald; src: url('../src/lib/fonts/Oswald.ttf'); }
+
+	:root {
+		--bg: #123456;
+		--ice: #b6cfe4;
+		--water: #2c3a49;
+		--dark: #0a1a18;
+		--ink: #e6f1fb;
+		--teal: #2fb3a8;
+		--gold: #f2b134;
+		--pink: #e0457b;
+		--violet: #8e7ce6;
+	}
+
+	html, body { margin: 0; padding: 0; }
+
+	.cover {
+		position: relative;
+		width: 630px;
+		height: 500px;
+		overflow: hidden;
+		background: var(--bg) url('../src/lib/images/Tunnel.svg') center / 175px;
+		display: grid;
+		place-content: center;
+		justify-items: center;
+	}
+
+	.vignette {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(transparent 30%, black 160%);
+	}
+
+	.content {
+		position: relative;
+		display: grid;
+		justify-items: center;
+	}
+
+	.title {
+		font-family: Oswald;
+		font-weight: 600;
+		font-size: 72px;
+		line-height: 1;
+		letter-spacing: 0.05em;
+		color: var(--ink);
+		text-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+	}
+
+	.tagline {
+		font-family: Oswald;
+		font-weight: 500;
+		font-size: 19px;
+		letter-spacing: 3px;
+		text-transform: uppercase;
+		color: var(--ice);
+		opacity: 0.75;
+		margin: 10px 0 28px;
+	}
+
+	.board {
+		display: grid;
+		grid: repeat(3, 84px) / repeat(3, 84px);
+		gap: 10px;
+		padding: 14px;
+		border-radius: 18px;
+		background: rgba(10, 26, 24, 0.55);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+	}
+
+	.tile {
+		display: grid;
+		place-content: center;
+		border-radius: 10px;
+		font-family: Archivo;
+		font-weight: 800;
+		font-size: 40px;
+		background: var(--water);
+		color: var(--ink);
+	}
+
+	.tile.on {
+		color: var(--dark);
+		box-shadow: 0 0 22px var(--glow);
+	}
+
+	.teal { background: var(--teal); --glow: rgba(47, 179, 168, 0.7); }
+	.gold { background: var(--gold); --glow: rgba(242, 177, 52, 0.7); }
+</style>
+</head>
+<body>
+	<div class="cover">
+		<div class="vignette"></div>
+		<div class="content">
+			<div class="title">TRADE SECRETS</div>
+			<div class="tagline">Every peek risks a move</div>
+			<div class="board">
+				<div class="tile">K</div>
+				<div class="tile">P</div>
+				<div class="tile on teal">Y</div>
+				<div class="tile">T</div>
+				<div class="tile">S</div>
+				<div class="tile">E</div>
+				<div class="tile on gold">Y</div>
+				<div class="tile">I</div>
+				<div class="tile">P</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
