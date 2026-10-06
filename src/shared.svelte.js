@@ -89,10 +89,9 @@ export const onAutoPlay = () => {
 
             post(doTrade, 800);
 
+            // the last swap wins, and onOver clears ss.auto once that trade is fully over
             if (i + 1 < ss.pzl.solution.length) {
                 post(() => autoSwap(i + 1), 2500);
-            } else {
-                delete ss.auto;
             }
         }, 800);
     };

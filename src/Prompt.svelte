@@ -73,7 +73,7 @@
 		persist();
 	};
 
-	const style = 'font-size: 20px; padding: 8px 25px 10px; letter-spacing: 0.03em; background: var(--ice); color: var(--dark); border-radius: 999px; ';
+	const style = 'font-size: 20px; padding: 8px 25px 10px; letter-spacing: 0.03em; background: var(--gold); color: var(--dark); border-radius: 999px; ';
 </script>
 
 {#if ss.prompt}

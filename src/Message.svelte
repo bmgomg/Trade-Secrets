@@ -1,12 +1,12 @@
 <script>
 	import { fade } from 'svelte/transition';
 	import { MSG_DEMO, MSG_REPLAY } from './const';
-	import { isOver, ss } from './shared.svelte';
+	import { ss } from './shared.svelte';
 
 	const message = $derived(ss.message ?? (ss.auto ? MSG_DEMO : ss.replay ? MSG_REPLAY : ''));
 </script>
 
-{#if message && !ss.prompt && !isOver()}
+{#if message && !ss.prompt && !ss.over}
 	<div class="message grid psc" in:fade>{message}</div>
 {/if}
 
