@@ -1,10 +1,13 @@
 <script>
     import { fade } from 'svelte/transition';
+    import { APP_STATE } from './const';
 
     let classes = $state('splash');
 
     const onPointerDown = () => {
-        localStorage.clear();
+        Object.keys(localStorage)
+            .filter((key) => key.startsWith(APP_STATE))
+            .forEach((key) => localStorage.removeItem(key));
         classes = 'splash dark';
     };
 </script>
